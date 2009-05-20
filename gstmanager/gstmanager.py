@@ -73,7 +73,7 @@ class PipelineManager(EventLauncher):
         gst.Element.send_event(self.pipeline, event)
 
     def set_caps(self, caps_name="capsfilter", caps=None):
-        logger.info(("Setting caps %s on capsfilter named " %(caps, caps_name)))
+        logger.info("Setting caps %s on capsfilter named " %(caps, caps_name))
         capsfilter = self.pipeline.get_by_name(caps_name)
         GstCaps = gst.caps_from_string(caps)
         capsfilter.set_property("caps",GstCaps)
@@ -83,32 +83,14 @@ class PipelineManager(EventLauncher):
         if t == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
             logger.info("Error: %s %s" %(err, debug))
-            if self.on_eos:
-                self.on_eos()
         elif t == gst.MESSAGE_EOS:
-            if self.on_eos:
-                self.on_eos()
+            self.launchEvent("eos")
         elif t == gst.MESSAGE_ELEMENT:
             name = message.structure.get_name()
-            if message.structure.get_name() == 'ipela_ptz':
-                res = message.structure
-                logger.info( "PTZ Message: pan %s tilt %s zoom %s at timestamp %s" %(res['pan'], res['tilt'], res['zoom'], res['timestamp']))
-                self.launchEvent(name, res)
-            elif message.structure.get_name() == 'ipela_obj':
-                res = message.structure
-                self.launchEvent(name, res)
-                #logger.info( "OBJ Message: ID %s width %s height %s" %(res['object_id'], res['width'], res['height'])
-            #elif message.structure.get_name() == 'level':
-            #    s = message.structure
-            #    for i in range(0, len(s['peak'])):
-            #        decay = clamp(s['decay'][i], -90.0, 0.0)
-            #        peak = clamp(s['peak'][i], -90.0, 0.0)
-            #        logger.info( "Got level message decay %s peak %s" %(decay, peak)
+            res = message.structure
+            self.launchEvent(name, res)
         else:
-            logger.info( "got unhandled message type %s, structure %s" %(t, message))
-
-    def on_eos(self):
-        logger.info("EOS")
+            logger.debug( "got unhandled message type %s, structure %s" %(t, message))
 
     def convert_time_to_seconds(self, time):
         if time == -1:
@@ -116,14 +98,6 @@ class PipelineManager(EventLauncher):
         else:
             time = time / 1000000000
         return time
-
-def clamp(x, min, max):
-    if x < min:
-        return min
-    elif x > max:
-        return max
-    return x
-
 
 if __name__ == '__main__':
 
