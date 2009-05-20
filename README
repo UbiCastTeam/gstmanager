@@ -1,0 +1,18 @@
+GSTMANAGER
+==========
+
+Based on the gstreamer python bindings, gstmanager is a python module containing a basic gstreamer programming context to ease application development; it offers the following features:
+
+    * launch from pipeline description string
+    * states wrapping
+    * position/seeking wrapping
+    * EOS emission forcing
+    * caps parsing
+    * error parsing
+    * element message proxy (to very easy to use event system) 
+
+Deps:
+
+    * python
+    * gstreamer and python bindings
+    * gtk python bindings (for the main loop) 
