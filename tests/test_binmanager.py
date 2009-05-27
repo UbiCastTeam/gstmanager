@@ -14,12 +14,16 @@ if __name__ == '__main__':
         stream=sys.stderr
     )
 
-    from gstmanager.profile import DefaultStreamingProfile
-    profile = DefaultStreamingProfile()
-    profile.to_string()
+    #from gstmanager.profile import DefaultRtpStreamingProfile
+    #profile = DefaultRtpStreamingProfile()
+    #profile.to_string()
+    #from gstmanager.bins.rtpencoding import RtpEncodingBin
+    #sink = RtpEncodingBin(profile)
 
-    from gstmanager.bins.rtpencoding import RtpEncodingBin
-    rtpsink = RtpEncodingBin(profile)
+    from gstmanager.profile import DefaultOggStreamingProfile
+    profile = DefaultOggStreamingProfile()
+    from gstmanager.bins.shoutcast import ShoutBin
+    sink = ShoutBin(profile)
 
     from gstmanager.bins.testsrc import TestSrcBin
     src = TestSrcBin()
@@ -31,16 +35,11 @@ if __name__ == '__main__':
     pp = PipelineManager()
     p = pp.pipeline
 
-    p.add(src, preview, rtpsink)
-    voutput = src.get_pad("voutput")
-    vinput = preview.get_pad("vinput")
-    voutput.link(vinput)
-    voutput2 = preview.get_pad("voutput")
-    vinput2 = rtpsink.get_pad("vinput")
-    voutput2.link(vinput2)
-    aoutput = src.get_pad("aoutput")
-    ainput = rtpsink.get_pad("ainput")
-    aoutput.link(ainput)
+    p.add(src, preview, sink)
+    pp.vlink(src, preview)
+    pp.vlink(preview, sink)
+    pp.alink(src, preview)
+    pp.alink(preview, sink)
 
     pp.run()
 

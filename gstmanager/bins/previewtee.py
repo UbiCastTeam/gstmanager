@@ -6,26 +6,46 @@ class PreviewTee(BinManager):
 
     def __init__(self):
         BinManager.__init__(self, name="PreviewTee")
-        q0 = gst.element_factory_make("queue", "q0")
-        tee = gst.element_factory_make("tee", "decoded_tee")
-        q1 = gst.element_factory_make("queue", "q1")
-        q2 = gst.element_factory_make("queue", "q2")
-        ff = gst.element_factory_make("ffmpegcolorspace")
-        vsink = gst.element_factory_make("xvimagesink")
+
+        # Video elements
+        vq0 = self.add_element("queue")
+        vtee = self.add_element("tee")
+        vq1 = self.add_element("queue")
+        vq2 = self.add_element("queue")
+        vcol = self.add_element("ffmpegcolorspace")
+        vsink = self.add_element("xvimagesink")
         #vsink = gst.element_factory_make("glimagesink")
         #vsink.set_property("sync", False)
 
-        self.add(q0, tee, q1, q2, ff, vsink)
+        vq0.link(vtee)
+        vtee.link(vq1)
+        vq1.link(vcol)
+        vcol.link(vsink)
+        vtee.link(vq2)
 
-        q0.link(tee)
-        tee.link(q1)
-        q1.link(ff)
-        ff.link(vsink)
-        tee.link(q2)
+        voutput_pad = vq2.get_pad("src")
+        self.add_ghostpad_from_static("voutput", voutput_pad)
 
-        output_pad = q2.get_pad("src")
-        self.add_ghostpad_from_static("voutput", output_pad)
+        vinput_pad = vq0.get_pad("sink")
+        self.add_ghostpad_from_static("vinput", vinput_pad)
+        
+        # Audio elements
+        aq0 = self.add_element("queue")
+        atee = self.add_element("tee")
+        aq1 = self.add_element("queue")
+        level = self.add_element("level")
+        # add other analysis elements here
+        asink = self.add_element("alsasink")
+        aq2 = self.add_element("queue")
 
-        input_pad = q0.get_pad("sink")
-        self.add_ghostpad_from_static("vinput", input_pad)
+        aq0.link(atee)
+        atee.link(aq1)
+        aq1.link(level)
+        level.link(asink)
+        atee.link(aq2)
 
+        aoutput_pad = aq2.get_pad("src")
+        self.add_ghostpad_from_static("aoutput", aoutput_pad)
+
+        ainput_pad = aq0.get_pad("sink")
+        self.add_ghostpad_from_static("ainput", ainput_pad)
