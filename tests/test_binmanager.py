@@ -36,10 +36,8 @@ if __name__ == '__main__':
     p = pp.pipeline
 
     p.add(src, preview, sink)
-    pp.vlink(src, preview)
-    pp.vlink(preview, sink)
-    pp.alink(src, preview)
-    pp.alink(preview, sink)
+    pp.avlink(src, preview)
+    pp.avlink(preview, sink)
 
     pp.run()
 

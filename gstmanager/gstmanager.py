@@ -23,6 +23,10 @@ class PipelineManager(EventLauncher):
             self.pipeline = gst.Pipeline()
             self.activate_bus()
 
+    def avlink(self, bin1, bin2):
+        self.vlink(bin1, bin2)
+        self.alink(bin1, bin2)
+
     def vlink(self, bin1, bin2):
         voutput = bin1.get_pad("voutput")
         vinput = bin2.get_pad("vinput")
