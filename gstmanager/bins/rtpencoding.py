@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
     rtpsink = RtpEncodingBin(profile)
 
-    from gstmanager.bins.testsrcbin import TestSrcBin
+    from gstmanager.bins.testsrc import TestSrcBin
     src = TestSrcBin() 
 
     from gstmanager.bins.previewtee import PreviewTee
