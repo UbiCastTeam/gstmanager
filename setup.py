@@ -16,5 +16,5 @@ setup(
     author_email="florent.thiery@ubicast.eu",
     url="http://code.google.com/p/gstmanager/",
     license="GNU/LGPLv3",
-    packages = ['gstmanager'],
+    packages = ['gstmanager', 'gstmanager/bins'],
 )
