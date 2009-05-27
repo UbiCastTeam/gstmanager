@@ -24,7 +24,6 @@ class RtpEncodingBin(BinManager):
         self.venc.set_properties("bitrate", profile.vbitrate, "byte-stream", True, "threads", 4)
 
         self.vpay = vpay = self.add_element("rtph264pay")
-        # Note: this does not work on Ubuntu 8.04
         #vpad = vpay.get_pad("src")
         #vpad.connect('notify::caps', self.notify_caps)
 
@@ -58,8 +57,6 @@ class RtpEncodingBin(BinManager):
 
         ainput_pad = aqueue.get_pad("sink")
         self.add_ghostpad_from_static("ainput", ainput_pad)
-
-        print vsink.get_property("port")
 
     def notify_caps(self, pad, caps):
         caps =  pad.get_caps()
@@ -106,7 +103,9 @@ if __name__ == '__main__':
     from gstmanager.bins.previewtee import PreviewTee
     preview = PreviewTee()
 
-    p = gst.Pipeline()
+    from gstmanager.gstmanager import PipelineManager
+    pp = PipelineManager()
+    p = pp.pipeline 
 
     p.add(src, preview, rtpsink)
     voutput = src.get_pad("voutput")
