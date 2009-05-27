@@ -3,6 +3,7 @@ GSTMANAGER
 
 Based on the gstreamer python bindings, gstmanager is a python module containing a basic gstreamer programming context to ease application development; it offers the following features:
 
+  * PipelineManager: pipeline manipulation
     * launch from pipeline description string
     * states wrapping
     * position/seeking wrapping
@@ -10,9 +11,21 @@ Based on the gstreamer python bindings, gstmanager is a python module containing
     * caps parsing
     * error parsing
     * element message proxy (to very easy to use event system) 
+  * BinManager: bin manipulation
+    * bin repository
+    * states wrapping
+
+Complementary features:
+  * logging support
+  * easy to use event system
 
 Deps:
 
     * python
     * gstreamer and python bindings
-    * gtk python bindings (for the main loop) 
+    * gtk python bindings (for the main loop)
+
+COMPATIBILITY
+=============
+    * PipelineManager has been tested on Ubuntu 8.04, 8.10 gstreamer environments
+    * BinManager does not work on Ubuntu 8.04 gstreamer environment 

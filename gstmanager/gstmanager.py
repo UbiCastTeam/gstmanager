@@ -15,9 +15,13 @@ pipeline_desc = "videotestsrc ! xvimagesink"
 from event import EventLauncher
 
 class PipelineManager(EventLauncher):
-    def __init__(self, pipeline_string=pipeline_desc):
+    def __init__(self, pipeline_string=None):
         EventLauncher.__init__(self)
-        self.parse_description(pipeline_string)
+        if pipeline_string is not None: 
+            self.parse_description(pipeline_string)
+        else:
+            self.pipeline = gst.Pipeline()
+            self.activate_bus()
 
     def redefine_pipeline(self, widget=None, new_string="Default"):
         #self.stop()
@@ -27,6 +31,9 @@ class PipelineManager(EventLauncher):
         logger.info("parsing pipeline description: %s" %string)
         self.pipeline_string = string
         self.pipeline = gst.parse_launch(string)
+        self.activate_bus()
+
+    def activate_bus(self):
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
         self.bus.connect('message', self.on_message)
