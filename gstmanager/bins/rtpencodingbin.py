@@ -5,6 +5,7 @@ import logging
 import gst
 from gstmanager.binmanager import BinManager
 logger = logging.getLogger('rtpencodingbin')
+import gobject
 
 class RtpEncodingBin(BinManager):
     def __init__(self, encoding_profile):
@@ -19,9 +20,14 @@ class RtpEncodingBin(BinManager):
         self.venc.set_properties("bitrate", profile.vbitrate, "byte-stream", True, "threads", 4)
 
         self.vpay = vpay = self.add_element("rtph264pay")
+        # Note: this does not work on Ubuntu 8.04
+        vpad = vpay.get_pad("src")
+        vpad.connect('notify::caps', self.notify_caps)
+
         self.vsink = vsink = self.add_element("udpsink")
         self.vsink.set_properties("host", profile.ip, "port", profile.vport)
         self.set_caps(vcaps, "video/x-raw-yuv, format=(fourcc)I420, framerate=(fraction)%s/1, width=(int)%s, height=(int)%s, pixel-aspect-ratio=(fraction)1/1" %(profile.framerate, profile.width, profile.height))
+
 
         vqueue.link(vproc)
         vproc.link(vcaps)
@@ -46,6 +52,10 @@ class RtpEncodingBin(BinManager):
         ainput_pad = aqueue.get_pad("sink")
         self.add_ghostpad_from_static("ainput", ainput_pad)
 
+    def notify_caps(self, pad, caps):
+        caps =  pad.get_caps()
+        print caps
+
     def get_sdp_info(self):
         #print self.get_state()
         #if self.get_state() == GST_STATE_PLAYING:
@@ -61,8 +71,6 @@ class RtpEncodingBin(BinManager):
             return False
 
 if __name__ == '__main__':
-    def bla(arg):
-        print "AFAFFAZF %s" %arg
 
     import logging, sys
 
@@ -77,23 +85,13 @@ if __name__ == '__main__':
 
     test = RtpEncodingBin(profile)
 
-    #from gstmanager.gstmanager import PipelineManager
-    #p = PipelineManager("videotestsrc ! queue name=src")
     p = gst.parse_launch("videotestsrc ! queue name=src")
-    #src = p.pipeline.get_by_name("src")
     src = p.get_by_name("src")
-    #p.pipeline.add(test)
     p.add(test)
     src.link(test)
 
-    vpad = test.vpay.get_pad("src")
-    vpad.connect('notify::caps', bla)
-    #test.run()
-    #p.run()
     p.set_state(gst.STATE_PLAYING)
-    #test.get_sdp_info()
-    # TEST
-    #vpad = test.vsink.get_pad("sink")
 
     import gtk
+    gtk.gdk.threads_init()
     gtk.main()
