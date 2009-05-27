@@ -86,7 +86,8 @@ if __name__ == '__main__':
     p.add(test)
     src.link(test)
 
-    test.vpay.connect('notify::caps', bla)
+    vpad = test.vpay.get_pad("src")
+    vpad.connect('notify::caps', bla)
     #test.run()
     #p.run()
     p.set_state(gst.STATE_PLAYING)
