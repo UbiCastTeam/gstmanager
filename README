@@ -19,8 +19,8 @@ Complementary features:
   * logging support
   * easy to use event system
 
-Deps:
-
+DEPS
+====
     * python
     * gstreamer and python bindings
     * gtk python bindings (for the main loop)

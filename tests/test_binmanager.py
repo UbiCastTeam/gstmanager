@@ -22,13 +22,13 @@ if __name__ == '__main__':
 
     from gstmanager.profile import DefaultOggStreamingProfile
     profile = DefaultOggStreamingProfile()
-    from gstmanager.bins.shoutcast import ShoutBin
+    from gstmanager.bins.sinks.shoutcast import ShoutBin
     sink = ShoutBin(profile)
 
-    from gstmanager.bins.testsrc import TestSrcBin
+    from gstmanager.bins.srcs.testsrc import TestSrcBin
     src = TestSrcBin()
 
-    from gstmanager.bins.previewtee import PreviewTee
+    from gstmanager.bins.tees.previewtee import PreviewTee
     preview = PreviewTee()
 
     from gstmanager.gstmanager import PipelineManager
