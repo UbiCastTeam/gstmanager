@@ -5,7 +5,7 @@ import os, imp
 from distutils.core import setup
 
 #gstmanager = imp.load_source("version", "version.py")
-VERSION = "0.1"
+VERSION = "0.2"
 
 setup(
     name="gstmanager",
@@ -16,5 +16,10 @@ setup(
     author_email="florent.thiery@ubicast.eu",
     url="http://code.google.com/p/gstmanager/",
     license="GNU/LGPLv3",
-    packages = ['gstmanager', 'gstmanager/bins'],
+    packages = ['gstmanager', 'gstmanager/bins',\
+                'gstmanager/bins/encoders', \
+                'gstmanager/bins/sinks', \
+                'gstmanager/bins/srcs', \
+                'gstmanager/bins/tees'
+                ],
 )
