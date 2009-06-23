@@ -40,15 +40,31 @@ class PipelineManager(EventLauncher):
     def redefine_pipeline(self, widget=None, new_string="Default"):
         self.parse_description(new_string)
 
-    def parse_description(self, string):
+    def is_running(self):
         if hasattr(self, "pipeline"):
             if self.get_state() == "GST_STATE_PLAYING":
-                logger.info("Stopping current running pipeline first")
-                self.stop()
+                logger.debug("Pipeline is up and running")
+                return True
+            else:
+                logger.debug("Pipeline is not in running state")
+                return False
+        else:
+                logger.debug("Pipeline has not been initialized yet")
+                return False
+
+    def parse_description(self, string):
+        if self.is_running():
+            was_running = True
+            logger.info("Stopping current running pipeline first")
+            self.stop()
+        else:
+            was_running = False
         logger.info("parsing pipeline description: %s" %string)
         self.pipeline_string = string
         self.pipeline = gst.parse_launch(string)
         self.activate_bus()
+        if was_running:
+            self.run()
 
     def activate_bus(self):
         self.bus = self.pipeline.get_bus()
