@@ -38,10 +38,13 @@ class PipelineManager(EventLauncher):
         aoutput.link(ainput)
 
     def redefine_pipeline(self, widget=None, new_string="Default"):
-        #self.stop()
         self.parse_description(new_string)
 
     def parse_description(self, string):
+        if hasattr(self, "pipeline"):
+            if self.get_state() == "GST_STATE_PLAYING":
+                logger.info("Stopping current running pipeline first")
+                self.stop()
         logger.info("parsing pipeline description: %s" %string)
         self.pipeline_string = string
         self.pipeline = gst.parse_launch(string)
