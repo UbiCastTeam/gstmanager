@@ -8,12 +8,13 @@ class Actioner(EventListener):
         self.registerEvent("eos")
         self.registerEvent("GstVideoAnalyse")
 
-    def evt_eos(self):
-        logger.info("EOS Recieved")
+    def evt_eos(self, event):
+        logger.info("EOS Received")
 
     def evt_GstVideoAnalyse(self, event):
-        logger.info("gstvideoanalyse Received")
-        logger.info("Brightness: %s" %event.content["brightness"])
+        brightness = event.content["brightness"]
+        variance = event.content["brightness-variance"]
+        logger.info("Brightness: %s Variance: %s" %(brightness, variance))
 
 if __name__ == '__main__':
     import logging, sys
