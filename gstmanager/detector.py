@@ -4,6 +4,12 @@
 import logging
 logger = logging.getLogger('detector')
 
+class ParserBasedDetector(object):
+    def __init__(self, file_path):
+        self.file_path = file_path
+        # TODO: regexp passing and parsing
+        # Example with alsa: /proc/asound/devices
+
 class FileBasedDetector(object):
     def __init__(self, file_pattern, type_desc):
         self.file_pattern = file_pattern
