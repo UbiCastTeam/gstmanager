@@ -14,6 +14,11 @@ Based on the gstreamer python bindings, gstmanager is a python module containing
   * BinManager: bin manipulation
     * bin repository
     * states wrapping
+  * Detector: devices detection (currently, V4L and Firewire devices are supported)
+  * SBins (for String Bins): simple, string-based bin-alike definition and use
+
+The goal is to help building flexible graphical gstreamer user interfaces with such workflows:
+DETECT_SOURCES -> CHOOSE_SOURCES -> CHOOSE_PROCESSING -> BUILD_PIPELINE -> LAUNCH_PIPELINE -> CONTROL_PIPELINE
 
 Complementary features:
   * logging support
