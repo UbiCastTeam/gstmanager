@@ -1,12 +1,18 @@
 from gstmanager.event import EventListener 
 
 class EOS_actioner(EventListener):
+    # This class will subscribe to proxied eos messages
     def __init__(self):
         EventListener.__init__(self)
         self.registerEvent("eos")
 
-    def evt_eos(self):
+    def evt_eos(self, event):
+    # This is the callback used for every evt_MSGNAME received
         logger.info("EOS Recieved")
+
+def set_brightness(pipelinel, value):
+    # set_property_on_element example
+    pipelinel.set_property_on_element(element_name="balance", property_name="brightness", value=value)
 
 if __name__ == '__main__':
     import logging, sys
@@ -18,11 +24,14 @@ if __name__ == '__main__':
     )
 
     from gstmanager.gstmanager import PipelineManager
-    pipeline_desc = "videotestsrc num-buffers=100 ! videobalance ! xvimagesink"
+    pipeline_desc = "videotestsrc num-buffers=100 ! videobalance name=balance ! xvimagesink"
 
     pipelinel = PipelineManager(pipeline_desc)
     pipelinel.run()
 
+    # Let's schedule some property changing
+    import gobject
+    gobject.timeout_add(2000, set_brightness, pipelinel, 0.2) 
 
     import gtk
     gtk.main()

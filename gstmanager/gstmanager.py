@@ -120,8 +120,8 @@ class PipelineManager(EventLauncher):
 
     def set_property_on_element(self, element_name="whatever", property_name="property", value="value"):
         logger.info("Setting value %s to property %s of element %s" %(value, property_name, element_name))
-        elt = self.get_by_name(element_name)
-        elt.set_property(property, value)
+        elt = self.pipeline.get_by_name(element_name)
+        elt.set_property(property_name, value)
 
     def on_message(self, bus, message):
         t = message.type
