@@ -20,6 +20,11 @@ setup(
                 'gstmanager/bins/encoders', \
                 'gstmanager/bins/sinks', \
                 'gstmanager/bins/srcs', \
-                'gstmanager/bins/tees'
+                'gstmanager/bins/tees', \
+                'gstmanager/detectors', \
+                'gstmanager/sbins', \
+                'gstmanager/sbins/encoders', \
+                'gstmanager/sbins/sinks', \
+                'gstmanager/sbins/sources'\
                 ],
 )
