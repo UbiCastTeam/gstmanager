@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# SBins are for "String Bins": manipulating Bins directly with Python can be tricky, notably because of the API differences (and lack of documentation porting) with the C API. Using string-based bin-like manipulation offers some flexibility over raw bin programming
+
+# Note: SBinManager is not released yet 
+
 from gstmanager.sbins.sources.videotest import VideoTestSource
 v = VideoTestSource()
 
