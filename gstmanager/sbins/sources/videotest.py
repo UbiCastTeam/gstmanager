@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from gstmanager.sbins.source import Source
+from gstmanager.sbins.source import VideoSource
 
-class VideoTestSource(Source):
+class VideoTestSource(VideoSource):
     # Video Test Source class
     def __init__(self, device_id="0"):
-        Source.__init__(self)
         self.description = "Video Test Source"
         self.type = "video"
-        self.sbin = "videotestsrc name=%s pattern=%s" %(self.tag, device_id)
+        sbin = "videotestsrc pattern=%s" %device_id
+        VideoSource.__init__(self, sbin)

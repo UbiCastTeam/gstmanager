@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from gstmanager.sbins.source import Source
+from gstmanager.sbins.source import AVSource
 
-class FirewireSource(Source):
+class FirewireSource(AVSource):
     # Firewire Source class
     def __init__(self, device_id="0"):
-        Source.__init__(self)
         self.description = "Firewire source"
         self.type = "audio/video"
-        self.sbin = "dv1394src name=%s port=%s" %(self.tag, device_id)
+        sbin = "dv1394src port=%s" %device_id
+        AVSource.__init__(self, sbin)

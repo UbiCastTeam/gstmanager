@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from gstmanager.sbins.source import Source
+from gstmanager.sbins.source import AudioSource
 
-class AudioTestSource(Source):
-    # Alsa Source class
+class AudioTestSource(AudioSource):
     def __init__(self):
-        Source.__init__(self)
-        self.description = "Audio test source"
+        self.description = "Audio test Source class, generates 440Hz tone"
         self.type = "audio"
-        self.sbin = "audiotestsrc name=%s" %self.tag
+        sbin = "audiotestsrc"
+        AudioSource.__init__(self, sbin)
