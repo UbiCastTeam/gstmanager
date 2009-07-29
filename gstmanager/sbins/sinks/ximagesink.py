@@ -8,5 +8,5 @@ class XImageSink(VideoSink):
     def __init__(self): 
         self.description = "X Image Sink"
         self.type = "video"
-        sbin = "ximagesink"
+        sbin = "ximagesink max-lateness=-1"
         VideoSink.__init__(self, sbin)

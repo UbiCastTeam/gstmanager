@@ -40,4 +40,8 @@ class OggEncoder(SBinManager):
         self.tags = ["a_src", "v_src"]
         self.type = "audio-video"
         self.description = "Ogg to File Encoder"
+        self.filename = filename
         self.sbin = "%s muxer_tee. ! filesink location=%s" %(self.pipeline_desc, filename)
+
+    def get_file(self):
+        return self.filename
