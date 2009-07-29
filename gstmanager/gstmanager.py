@@ -126,7 +126,7 @@ class PipelineManager(EventLauncher):
     def get_property_on_element(self, element_name="whatever", property_name="property", value="value"):
         logger.info("Getting value %s to property %s of element %s" %(value, property_name, element_name))
         elt = self.pipeline.get_by_name(element_name)
-        result = elt.get_property(property_name, value)
+        result = elt.get_property(property_name)
         return result
 
     def on_message(self, bus, message):
