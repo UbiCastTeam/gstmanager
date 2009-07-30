@@ -17,6 +17,7 @@ from event import EventLauncher
 class PipelineManager(EventLauncher):
     def __init__(self, pipeline_string=None):
         EventLauncher.__init__(self)
+        self.send_debug = False
         if pipeline_string is not None: 
             self.parse_description(pipeline_string)
         else:
@@ -140,7 +141,8 @@ class PipelineManager(EventLauncher):
             res = message.structure
             self.launchEvent(name, res)
         else:
-            logger.debug( "got unhandled message type %s, structure %s" %(t, message))
+            if self.send_debug:
+                logger.debug( "got unhandled message type %s, structure %s" %(t, message))
 
     def convert_time_to_seconds(self, time):
         if time == -1:

@@ -5,17 +5,17 @@ from gstmanager.sbins.encoder import VideoEncoder, AudioEncoder
 from gstmanager.sbins.muxer import Muxer
 
 class TheoraEncoder(VideoEncoder):
-    def __init__(self):
+    def __init__(self, profile):
         self.description = "Theora encoder"
         self.type = "video"
-        sbin = "theoraenc bitrate=2000"
-        VideoEncoder.__init__(self, sbin)
+        sbin = "theoraenc bitrate=%s" %profile.video_bitrate
+        VideoEncoder.__init__(self, sbin, profile=profile)
 
 class VorbisEncoder(AudioEncoder):
-    def __init__(self):
+    def __init__(self, profile):
         self.description = "Vorbis encoder"
         self.type = "audio"
-        sbin = "vorbisenc bitrate=128000"
+        sbin = "vorbisenc bitrate=%s" %profile.audio_bitrate
         AudioEncoder.__init__(self, sbin)
 
 class OggMuxer(Muxer):
@@ -26,13 +26,14 @@ class OggMuxer(Muxer):
         Muxer.__init__(self, sbin)
 
 from gstmanager.sbinmanager import SBinManager
+from gstmanager.profile import DefaultEncodingProfile
 
 class OggEncoder(SBinManager):
-    def __init__(self, filename):
+    def __init__(self, filename="/tmp/test.ogg",profile=DefaultEncodingProfile()):
         SBinManager.__init__(self)
         self.check_for_compat = False
-        self.venc = TheoraEncoder()
-        self.aenc = VorbisEncoder()
+        self.venc = TheoraEncoder(profile)
+        self.aenc = VorbisEncoder(profile)
         self.muxer = OggMuxer()
         self.add(self.venc)
         self.add(self.aenc)
