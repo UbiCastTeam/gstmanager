@@ -5,7 +5,7 @@ import os, imp
 from distutils.core import setup
 
 #gstmanager = imp.load_source("version", "version.py")
-VERSION = "0.3"
+VERSION = "0.4"
 
 setup(
     name="gstmanager",
@@ -24,6 +24,7 @@ setup(
                 'gstmanager/detectors', \
                 'gstmanager/sbins', \
                 'gstmanager/sbins/encoders', \
+                'gstmanager/sbins/analysis', \
                 'gstmanager/sbins/sinks', \
                 'gstmanager/sbins/sources'\
                 ],

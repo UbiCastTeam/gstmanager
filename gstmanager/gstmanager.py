@@ -23,19 +23,6 @@ class PipelineManager(EventLauncher):
             self.pipeline = gst.Pipeline()
             self.activate_bus()
 
-    def avlink(self, bin1, bin2):
-        self.vlink(bin1, bin2)
-        self.alink(bin1, bin2)
-
-    def vlink(self, bin1, bin2):
-        voutput = bin1.get_pad("voutput")
-        vinput = bin2.get_pad("vinput")
-        voutput.link(vinput)
-
-    def alink(self, bin1, bin2):
-        aoutput = bin1.get_pad("aoutput")
-        ainput = bin2.get_pad("ainput")
-        aoutput.link(ainput)
 
     def redefine_pipeline(self, widget=None, new_string="Default"):
         self.parse_description(new_string)
@@ -129,6 +116,18 @@ class PipelineManager(EventLauncher):
         result = elt.get_property(property_name)
         return result
 
+    def activate_caps_reporting_on_element(self, element_name="whatever"):
+        logger.debug("Activating caps reporting on element %s" %element_name)
+        elt = self.pipeline.get_by_name(element_name)
+        out_pad = elt.get_pad("src")
+        out_pad.set_setcaps_function(self.send_caps)
+
+    def send_caps(self, pad, caps):
+        logger.debug("Got negociated caps")
+        caps_str = caps.to_string()
+        self.launchEvent("caps", caps_str)
+        return True
+
     def on_message(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_ERROR:
@@ -149,6 +148,21 @@ class PipelineManager(EventLauncher):
         else:
             time = time / 1000000000
         return time
+
+    # NOTE : DEPRECATED
+    def avlink(self, bin1, bin2):
+        self.vlink(bin1, bin2)
+        self.alink(bin1, bin2)
+
+    def vlink(self, bin1, bin2):
+        voutput = bin1.get_pad("voutput")
+        vinput = bin2.get_pad("vinput")
+        voutput.link(vinput)
+
+    def alink(self, bin1, bin2):
+        aoutput = bin1.get_pad("aoutput")
+        ainput = bin2.get_pad("ainput")
+        aoutput.link(ainput)
 
 if __name__ == '__main__':
 
