@@ -17,7 +17,6 @@ class VideoEncoder(object):
         self.tags = ["v_src"]
         self.enc_tag = "v_enc"
         self.caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)%s, height=(int)%s, framerate=(fraction)25/1" %(profile.video_width, profile.video_height)
-        print "\n\n%s\n\n" %self.caps
         sbin_begin = "%s_tee. ! queue ! ffmpegcolorspace ! videorate ! videoscale ! %s !" %(self.tags[0], self.caps)
         sbin_end = "! queue ! tee name=%s_tee" %self.enc_tag
         self.sbin = "%s %s name=vencoder %s" %(sbin_begin, sbin_content, sbin_end)
