@@ -34,6 +34,7 @@ if __name__ == '__main__':
     pipelinel = PipelineManager(pipeline_desc)
 
     import gobject
+    gobject.threads_init()
     gobject.idle_add(pipelinel.activate_caps_reporting_on_element, "pay")
     gobject.idle_add(pipelinel.run)
     import gtk
