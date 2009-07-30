@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import logging
+logger = logging.getLogger("encoder")
+
 from gstmanager.profile import DefaultEncodingProfile
 
 class AudioEncoder(object):
@@ -24,3 +27,39 @@ class VideoEncoder(object):
         sbin_end = "! queue ! tee name=%s" %self.enc_tag
         self.sbin = "%s %s name=vencoder_%s %s" %(sbin_begin, sbin_content, VideoEncoder.index, sbin_end)
         VideoEncoder.index += 1
+
+from gstmanager.sbinmanager import SBinManager
+from gstmanager.event import EventLauncher
+import gobject, os
+
+class FileEncoder(SBinManager, EventLauncher):
+    def __init__(self, filename):
+        SBinManager.__init__(self)
+        EventLauncher.__init__(self)
+        self.check_for_compat = False
+        self.filename = filename
+        self.size = 0
+        logger.info("Activating file growth checking")
+        gobject.timeout_add(5000, self.check_file_growth)
+
+    def get_filename(self):
+        return self.filename
+
+    def get_filesize(self):
+        filename = self.get_filename()
+        if os.path.isfile(filename):
+            return os.path.getsize(filename)
+        else:
+            logger.error("File %s does not exist" %filename)
+            return 0
+
+    def check_file_growth(self):
+        new_size = self.get_filesize()
+        logger.debug("Current file size is %s" %new_size)
+        if new_size <= self.size:
+            logger.error("File growth stalled !")
+            self.launchEvent("encoding-error", "Encoding of %s stopped" %self.filename)
+            return False
+        else:
+            self.launchEvent("encoding-progress", new_size)            
+            return True

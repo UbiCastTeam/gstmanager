@@ -25,13 +25,12 @@ class OggMuxer(Muxer):
         sbin = "oggmux"
         Muxer.__init__(self, sbin)
 
-from gstmanager.sbinmanager import SBinManager
+from gstmanager.sbins.encoder import FileEncoder
 from gstmanager.profile import DefaultEncodingProfile
 
-class OggEncoder(SBinManager):
+class OggEncoder(FileEncoder):
     def __init__(self, filename="/tmp/test.ogg",profile=DefaultEncodingProfile()):
-        SBinManager.__init__(self)
-        self.check_for_compat = False
+        FileEncoder.__init__(self, filename)
         self.venc = TheoraEncoder(profile)
         self.aenc = VorbisEncoder(profile)
         self.muxer = OggMuxer()
@@ -41,8 +40,4 @@ class OggEncoder(SBinManager):
         self.tags = ["a_src", "v_src"]
         self.type = "audio-video"
         self.description = "Ogg to File Encoder"
-        self.filename = filename
         self.sbin = "%s muxer_tee. ! filesink location=%s" %(self.pipeline_desc, filename)
-
-    def get_file(self):
-        return self.filename
