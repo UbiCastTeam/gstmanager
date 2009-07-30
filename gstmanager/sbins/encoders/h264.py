@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from gstmanager.sbins.encoder import VideoEncoder
+from gstmanager.sbins.encoder import DefaultEncodingProfile
+
+class H264Encoder(VideoEncoder):
+    def __init__(self, bytestream="False", profile=DefaultEncodingProfile()):
+        self.description = "h264 encoder"
+        self.type = "video"
+        sbin = "x264enc bitrate=%s threads=%s byte-stream=%s" %(profile.video_bitrate, profile.encoding_threads, bytestream)
+        VideoEncoder.__init__(self, sbin, profile)
+
+from gstmanager.sbins.encoder import AudioEncoder
+
+class AACEncoder(AudioEncoder):
+    def __init__(self, profile=DefaultEncodingProfile()):
+        self.description = "AAC encoder"
+        self.type = "audio"
+        sbin = "faac bitrate=%s" %profile.audio_bitrate
+        AudioEncoder.__init__(self, sbin)
