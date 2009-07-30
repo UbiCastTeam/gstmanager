@@ -24,7 +24,6 @@ class PipelineManager(EventLauncher):
             self.pipeline = gst.Pipeline()
             self.activate_bus()
 
-
     def redefine_pipeline(self, widget=None, new_string="Default"):
         self.parse_description(new_string)
 

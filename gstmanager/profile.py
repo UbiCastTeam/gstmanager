@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-class DefaultEncodingProfile:
+class DefaultEncodingProfile(object):
     def __init__(self):
         self.video_bitrate = 2000 
         self.audio_bitrate = 128000 
@@ -11,3 +11,6 @@ class DefaultEncodingProfile:
         self.video_port = "1234" 
         self.audio_port = "1235" 
         self.encoding_threads = "2"
+
+    def get_string(self):
+        return self.__dict__
