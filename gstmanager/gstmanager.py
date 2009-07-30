@@ -149,21 +149,6 @@ class PipelineManager(EventLauncher):
             time = time / 1000000000
         return time
 
-    # NOTE : DEPRECATED
-    def avlink(self, bin1, bin2):
-        self.vlink(bin1, bin2)
-        self.alink(bin1, bin2)
-
-    def vlink(self, bin1, bin2):
-        voutput = bin1.get_pad("voutput")
-        vinput = bin2.get_pad("vinput")
-        voutput.link(vinput)
-
-    def alink(self, bin1, bin2):
-        aoutput = bin1.get_pad("aoutput")
-        ainput = bin2.get_pad("ainput")
-        aoutput.link(ainput)
-
 if __name__ == '__main__':
 
     import logging, sys
