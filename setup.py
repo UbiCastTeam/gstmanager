@@ -16,11 +16,7 @@ setup(
     author_email="florent.thiery@ubicast.eu",
     url="http://code.google.com/p/gstmanager/",
     license="GNU/LGPLv3",
-    packages = ['gstmanager', 'gstmanager/bins',\
-                'gstmanager/bins/encoders', \
-                'gstmanager/bins/sinks', \
-                'gstmanager/bins/srcs', \
-                'gstmanager/bins/tees', \
+    packages = ['gstmanager', \
                 'gstmanager/detectors', \
                 'gstmanager/sbins', \
                 'gstmanager/sbins/encoders', \
