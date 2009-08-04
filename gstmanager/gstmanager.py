@@ -106,14 +106,14 @@ class PipelineManager(EventLauncher):
         capsfilter.set_property("caps",GstCaps)
 
     def set_property_on_element(self, element_name="whatever", property_name="property", value="value"):
-        logger.info("Setting value %s to property %s of element %s" %(value, property_name, element_name))
+        logger.debug("Setting value %s to property %s of element %s" %(value, property_name, element_name))
         elt = self.pipeline.get_by_name(element_name)
         elt.set_property(property_name, value)
 
-    def get_property_on_element(self, element_name="whatever", property_name="property", value="value"):
-        logger.info("Getting value %s to property %s of element %s" %(value, property_name, element_name))
+    def get_property_on_element(self, element_name="whatever", property_name="property"):
         elt = self.pipeline.get_by_name(element_name)
         result = elt.get_property(property_name)
+        logger.debug("Getting value of property %s of element %s: %s" %(property_name, element_name, result))
         return result
 
     def activate_caps_reporting_on_element(self, element_name="whatever"):
