@@ -29,18 +29,21 @@ class VideoEncoder(object):
         VideoEncoder.index += 1
 
 from gstmanager.sbinmanager import SBinManager
-from gstmanager.event import EventLauncher
+from gstmanager.event import EventLauncher, EventListener
 import gobject, os
 
-class FileEncoder(SBinManager, EventLauncher):
+class FileEncoder(SBinManager, EventLauncher, EventListener):
     def __init__(self, filename):
         SBinManager.__init__(self)
+        EventListener.__init__(self)
         EventLauncher.__init__(self)
         self.check_for_compat = False
         self.filename = filename
         self.size = 0
         logger.info("Activating file growth checking")
         gobject.timeout_add(5000, self.check_file_growth)
+        self.is_running = False
+        self.registerEvent("sos")
 
     def get_filename(self):
         return self.filename
@@ -53,6 +56,13 @@ class FileEncoder(SBinManager, EventLauncher):
             logger.error("File %s does not exist" %filename)
             return 0
 
+    def evt_sos(self, event):
+        logger.info("SOS: Starting filesize checking")
+        self.is_running = True
+
+    def evt_eos(self, event):
+        self.is_running = False
+
     def check_file_growth(self):
         new_size = self.get_filesize()
         logger.debug("Current file size is %s" %new_size)
@@ -60,6 +70,9 @@ class FileEncoder(SBinManager, EventLauncher):
             logger.error("File %s growth stalled !" %self.filename)
             self.launchEvent("encoding_error", "Encoding of %s stopped" %self.filename)
             return False
-        else:
+        elif not self.is_running:
+            logger.info("File growth checking, recording is not running (waiting for 'SOS': Start Of Stream)")
+            return False
+        elif self.is_running:
             self.launchEvent("encoding_progress", new_size)            
             return True

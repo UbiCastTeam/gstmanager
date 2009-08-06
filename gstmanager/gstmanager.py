@@ -60,7 +60,11 @@ class PipelineManager(EventLauncher):
 
     def run(self, *args):
         logger.info("Starting pipeline")
+        self.launchEvent("sos", "Start Of Stream")
         self.pipeline.set_state(gst.STATE_PLAYING)
+
+    def play(self, *args):
+        self.run()
 
     def pause(self, *args):
         logger.info("Pausing pipeline")
