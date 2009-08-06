@@ -62,6 +62,8 @@ class PipelineManager(EventLauncher):
         logger.info("Starting pipeline")
         self.launchEvent("sos", "Start Of Stream")
         self.pipeline.set_state(gst.STATE_PLAYING)
+        # Returning false if it was called by a gobject.timeout 
+        return False
 
     def play(self, *args):
         self.run()

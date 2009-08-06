@@ -40,10 +40,14 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         self.check_for_compat = False
         self.filename = filename
         self.size = 0
-        logger.info("Activating file growth checking")
         gobject.timeout_add(5000, self.check_file_growth)
         self.is_running = False
         self.registerEvent("sos")
+
+    def destroy(self):
+        logger.debug("Unregistering event sos")
+        self.unregisterEvent("sos")
+        self.size = 0
 
     def get_filename(self):
         return self.filename
@@ -61,6 +65,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         self.is_running = True
 
     def evt_eos(self, event):
+        logger.info("EOS: Stopping filesize checking")
         self.is_running = False
 
     def check_file_growth(self):
@@ -71,7 +76,6 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
             self.launchEvent("encoding_error", "Encoding of %s stopped" %self.filename)
             return False
         elif not self.is_running:
-            logger.info("File growth checking, recording is not running (waiting for 'SOS': Start Of Stream)")
             return False
         elif self.is_running:
             self.launchEvent("encoding_progress", new_size)            
