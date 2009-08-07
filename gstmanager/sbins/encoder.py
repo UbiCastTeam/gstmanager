@@ -40,7 +40,6 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         self.check_for_compat = False
         self.filename = filename
         self.size = 0
-        gobject.timeout_add(5000, self.check_file_growth)
         self.is_running = False
         self.registerEvent("sos")
 
@@ -63,15 +62,17 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
     def evt_sos(self, event):
         logger.info("SOS: Starting filesize checking")
         self.is_running = True
+        gobject.timeout_add(5000, self.check_file_growth)
 
     def evt_eos(self, event):
         logger.info("EOS: Stopping filesize checking")
         self.is_running = False
+        self.size = 0
 
     def check_file_growth(self):
         new_size = self.get_filesize()
         logger.debug("Current file size is %s" %new_size)
-        if new_size <= self.size:
+        if new_size <= self.size and self.is_running:
             logger.error("File %s growth stalled !" %self.filename)
             self.launchEvent("encoding_error", "Encoding of %s stopped" %self.filename)
             return False
