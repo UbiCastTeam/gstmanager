@@ -5,7 +5,7 @@ import os, imp
 from distutils.core import setup
 
 #gstmanager = imp.load_source("version", "version.py")
-VERSION = "0.4"
+VERSION = "0.5"
 
 setup(
     name="gstmanager",
