@@ -22,6 +22,7 @@ setup(
                 'gstmanager/sbins/encoders', \
                 'gstmanager/sbins/analysis', \
                 'gstmanager/sbins/sinks', \
-                'gstmanager/sbins/sources'\
+                'gstmanager/sbins/sources', \
+                'gstmanager/profiles'\
                 ],
 )
