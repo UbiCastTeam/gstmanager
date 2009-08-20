@@ -16,5 +16,5 @@ class DVAudioSource(AudioSource):
         self.description = "Audio DV (Firewire) source"
         self.type = "audio"
         a_caps = "audio/x-raw-int"
-        sbin = "dv_src. ! %s ! queue ! tee name=a_src_tee" %a_caps
+        sbin = "dv_src. ! %s" %a_caps
         AudioSource.__init__(self, sbin)
