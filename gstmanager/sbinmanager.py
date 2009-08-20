@@ -10,7 +10,7 @@ class SBinManager(object):
         self.check_for_compat = True
 
     def add(self, element):
-        if self.check_for_compat:
+        if self.check_for_compat and element.type.find("source")!= -1:
             if element.sbin.find("tee name=%s_tee" %element.tags[0])!=-1:
                 logger.info("Adding %s source %s to pipeline" %(element.type, element.description))
                 self._add_sbin(element.sbin)
