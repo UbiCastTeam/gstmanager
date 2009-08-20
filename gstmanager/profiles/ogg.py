@@ -1,7 +1,7 @@
 
 from gstmanager.profile import DefaultEncodingProfile
 
-class OggRecordingProfile(DefaultEncodingProfile):
+class OggDefaultRecordingProfile(DefaultEncodingProfile):
     def __init__(self):
         DefaultEncodingProfile.__init__(self)
         self.extension = "ogg"
