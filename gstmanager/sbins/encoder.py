@@ -42,6 +42,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         self.size = 0
         self.is_running = False
         self.registerEvent("sos")
+        self.registerEvent("eos")
 
     def destroy(self):
         logger.debug("Unregistering event sos")
