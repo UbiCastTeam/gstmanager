@@ -24,7 +24,10 @@ class PipelineManager(EventLauncher):
             self.pipeline = gst.Pipeline()
             self.activate_bus()
 
-    def redefine_pipeline(self, widget=None, new_string="Default"):
+    def redefine_pipeline(self, widget=None, new_string=None):
+        if new_string is None:
+            logger.debug('Reinitializing pipeline')
+            new_string = self.pipeline_string
         self.parse_description(new_string)
 
     def is_running(self):
