@@ -12,3 +12,6 @@ class DefaultDVProfile(DefaultEncodingProfile):
         self.misc_bitrate = mb = 8700 #kbits/s
         self.total_bitrate = tb = (vb + mb) + ab/1000 #kbits/s
         self.total_bitrate_kB = tb*1024 #
+
+    def get_total_bitrate(self):
+        return self.total_bitrate

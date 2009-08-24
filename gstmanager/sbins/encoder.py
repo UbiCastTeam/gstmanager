@@ -14,7 +14,9 @@ class ProgressInfo(EventListener):
         self.start_time = datetime.datetime.now()
         self.hduration = "0:00:00"
         self.size = 0
+        self.location = None
         self.registerEvent("sos")
+        self.registerEvent("encoding_started")
 
     def update(self, size):
         self.size = size
@@ -24,6 +26,9 @@ class ProgressInfo(EventListener):
     def evt_sos(self, event):
         self.start_time = datetime.datetime.now()
         self.size = 0
+
+    def evt_encoding_started(self, event):
+        self.location=event.content
 
 class AudioEncoder(object):
     index = 0
@@ -83,6 +88,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         logger.info("SOS: Starting filesize checking")
         self.is_running = True
         gobject.timeout_add(1000, self.check_file_growth)
+        self.launchEvent("encoding_started", self.get_filename())
 
     def evt_eos(self, event):
         logger.info("EOS: Stopping filesize checking")
