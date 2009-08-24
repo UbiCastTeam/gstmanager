@@ -82,7 +82,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
     def evt_sos(self, event):
         logger.info("SOS: Starting filesize checking")
         self.is_running = True
-        gobject.timeout_add(5000, self.check_file_growth)
+        gobject.timeout_add(1000, self.check_file_growth)
 
     def evt_eos(self, event):
         logger.info("EOS: Stopping filesize checking")
