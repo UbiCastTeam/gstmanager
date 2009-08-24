@@ -8,6 +8,14 @@ import datetime
 from gstmanager.profile import DefaultEncodingProfile
 from gstmanager.event import EventLauncher, EventListener
 
+"""
+List of encoder-related signals:
+ * encoding_started: sends filename
+ * encoding_properties: sends total encoding bitrate
+ * encoding_error: sends encoding error
+ * encoding_progress: sends updated file size
+"""
+
 class ProgressInfo(EventListener):
     def __init__(self):
         EventListener.__init__(self)
