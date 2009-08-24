@@ -30,7 +30,9 @@ class Actioner(EventListener):
         sys.exit(0)
 
     def evt_encoding_progress(self, event):
-        print "Filesize is %s" %event.content
+        size = event.content.size
+        dur = event.content.hduration
+        print "Filesize is %s, at duration %s" %(size, dur)
 
     def evt_encoding_error(self, event):
         print "Error, encoding stalled"
@@ -62,8 +64,8 @@ if __name__ == '__main__':
     from gstmanager.sbins.sources.videotest import VideoTestSource
     v = VideoTestSource()
 
-    from gstmanager.sbins.sources.alsa import AlsaSource
-    a = AlsaSource(2)
+    from gstmanager.sbins.sources.audiotest import AudioTestSource
+    a = AudioTestSource()
 
     from gstmanager.sbins.sinks.xvimagesink import XVImageSink
     sink = XVImageSink()

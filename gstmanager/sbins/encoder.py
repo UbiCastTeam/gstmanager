@@ -4,7 +4,26 @@
 import logging
 logger = logging.getLogger("encoder")
 
+import datetime
 from gstmanager.profile import DefaultEncodingProfile
+from gstmanager.event import EventLauncher, EventListener
+
+class ProgressInfo(EventListener):
+    def __init__(self):
+        EventListener.__init__(self)
+        self.start_time = datetime.datetime.now()
+        self.hduration = "0:00:00"
+        self.size = 0
+        self.registerEvent("sos")
+
+    def update(self, size):
+        self.size = size
+        self.duration = dur = datetime.datetime.now() - self.start_time
+        self.hduration = str(dur).split(".")[0]
+
+    def evt_sos(self, event):
+        self.start_time = datetime.datetime.now()
+        self.size = 0
 
 class AudioEncoder(object):
     index = 0
@@ -29,7 +48,6 @@ class VideoEncoder(object):
         VideoEncoder.index += 1
 
 from gstmanager.sbinmanager import SBinManager
-from gstmanager.event import EventLauncher, EventListener
 import gobject, os
 
 class FileEncoder(SBinManager, EventLauncher, EventListener):
@@ -37,6 +55,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         SBinManager.__init__(self)
         EventListener.__init__(self)
         EventLauncher.__init__(self)
+        self.progress = ProgressInfo() 
         self.check_for_compat = False
         self.filename = filename
         self.size = 0
@@ -80,5 +99,6 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         elif not self.is_running:
             return False
         elif self.is_running:
-            self.launchEvent("encoding_progress", new_size)            
+            self.progress.update(new_size)
+            self.launchEvent("encoding_progress", self.progress)            
             return True
