@@ -73,7 +73,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         self.filename = filename
         self.size = 0
         self.is_running = False
-        self.registerEvent("sos")
+        self.registerEvent("encoder_start")
         self.registerEvent("eos")
 
     def destroy(self):
@@ -92,8 +92,8 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
             logger.error("File %s does not exist" %filename)
             return 0
 
-    def evt_sos(self, event):
-        logger.info("SOS: Starting filesize checking")
+    def evt_encoder_start(self, event):
+        logger.info("evt_encoder_start: Starting filesize checking")
         self.is_running = True
         gobject.timeout_add(1000, self.check_file_growth)
         self.launchEvent("encoding_started", self.get_filename())
