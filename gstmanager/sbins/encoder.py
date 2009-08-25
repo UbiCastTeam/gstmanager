@@ -9,10 +9,13 @@ from gstmanager.profile import DefaultEncodingProfile
 from gstmanager.event import EventLauncher, EventListener
 
 """
-List of encoder-related signals:
+List of encoder-related signals
+
+Listening to:
  * encoding_started: will start filesize checking and stats grabbing 
  * encoding_stopped: will stop filesize checking and stats grabbing 
 
+Sent signals:
  * encoding_filename: sends filename
  * encoding_properties: sends total encoding bitrate
  * encoding_error: sends encoding error
