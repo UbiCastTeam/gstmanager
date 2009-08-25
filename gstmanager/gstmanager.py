@@ -24,10 +24,14 @@ class PipelineManager(EventLauncher):
             self.pipeline = gst.Pipeline()
             self.activate_bus()
 
+    def get_name(self):
+        if hasattr(self, "pipeline"):
+            return self.pipeline.get_name()
+
     def redefine_pipeline(self, widget=None, new_string=None):
         if new_string is None:
-            logger.debug('Reinitializing pipeline')
-            new_string = self.pipeline_string
+            new_string = self.pipeline_desc
+            logger.debug('Reinitializing %s pipeline to %s' %(self.get_name(), new_string))
         self.parse_description(new_string)
 
     def is_running(self):
@@ -43,18 +47,10 @@ class PipelineManager(EventLauncher):
                 return False
 
     def parse_description(self, string):
-        if self.is_running():
-            was_running = True
-            logger.info("Stopping current running pipeline first")
-            self.stop()
-        else:
-            was_running = False
-        logger.info("parsing pipeline description: %s" %string)
-        self.pipeline_string = string
+        self.pipeline_desc = string
         self.pipeline = gst.parse_launch(string)
+        logger.info("parsing pipeline description in %s: %s" %(self.pipeline.get_name(), string))
         self.activate_bus()
-        if was_running:
-            self.run()
 
     def activate_bus(self):
         self.bus = self.pipeline.get_bus()
@@ -62,8 +58,8 @@ class PipelineManager(EventLauncher):
         self.bus.connect('message', self.on_message)
 
     def run(self, *args):
-        logger.info("Starting pipeline")
-        self.launchEvent("sos", "Start Of Stream")
+        logger.info("Starting pipeline %s" %self.get_name())
+        self.launchEvent("sos", self.get_name())
         self.pipeline.set_state(gst.STATE_PLAYING)
         # Returning false if it was called by a gobject.timeout 
         return False
