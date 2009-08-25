@@ -10,7 +10,10 @@ from gstmanager.event import EventLauncher, EventListener
 
 """
 List of encoder-related signals:
- * encoding_started: sends filename
+ * encoding_started: will start filesize checking and stats grabbing 
+ * encoding_stopped: will stop filesize checking and stats grabbing 
+
+ * encoding_filename: sends filename
  * encoding_properties: sends total encoding bitrate
  * encoding_error: sends encoding error
  * encoding_progress: sends updated file size
@@ -23,7 +26,7 @@ class ProgressInfo(EventListener):
         self.hduration = "0:00:00"
         self.size = 0
         self.location = None
-        self.registerEvent("sos")
+        self.registerEvent("encoding_filename")
         self.registerEvent("encoding_started")
 
     def update(self, size):
@@ -31,11 +34,11 @@ class ProgressInfo(EventListener):
         self.duration = dur = datetime.datetime.now() - self.start_time
         self.hduration = str(dur).split(".")[0]
 
-    def evt_sos(self, event):
+    def evt_encoding_started(self, event):
         self.start_time = datetime.datetime.now()
         self.size = 0
 
-    def evt_encoding_started(self, event):
+    def evt_encoding_filename(self, event):
         self.location=event.content
 
 class AudioEncoder(object):
@@ -73,8 +76,8 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         self.filename = filename
         self.size = 0
         self.is_running = False
-        self.registerEvent("encoder_start")
-        self.registerEvent("eos")
+        self.registerEvent("encoding_started")
+        self.registerEvent("encoding_stopped")
 
     def destroy(self):
         logger.debug("Unregistering event sos")
@@ -92,13 +95,13 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
             logger.error("File %s does not exist" %filename)
             return 0
 
-    def evt_encoder_start(self, event):
-        logger.info("evt_encoder_start: Starting filesize checking")
+    def evt_encoding_started(self, event):
+        logger.info("evt_encoder_started: Starting filesize checking")
         self.is_running = True
         gobject.timeout_add(1000, self.check_file_growth)
-        self.launchEvent("encoding_started", self.get_filename())
+        self.launchEvent("encoding_filename", self.get_filename())
 
-    def evt_eos(self, event):
+    def evt_encoding_stopped(self, event):
         logger.info("EOS: Stopping filesize checking")
         self.is_running = False
         self.size = 0
