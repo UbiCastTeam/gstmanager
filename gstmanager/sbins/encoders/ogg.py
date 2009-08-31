@@ -30,7 +30,10 @@ from gstmanager.profile import DefaultEncodingProfile
 
 class OggEncoder(FileEncoder):
     def __init__(self, filename="/tmp/test.ogg",profile=DefaultEncodingProfile()):
+        filename = "%s.%s" %(filename, profile.extension)
         FileEncoder.__init__(self, filename)
+
+
         self.venc = TheoraEncoder(profile)
         self.aenc = VorbisEncoder(profile)
         self.muxer = OggMuxer()
