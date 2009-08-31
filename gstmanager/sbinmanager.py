@@ -30,7 +30,8 @@ class SBinManager(object):
 
     def add_many(self, *args):
         for element in args:
-            self.add(element)
+            if element is not None:
+                self.add(element)
 
     def _add_sbin(self, sbin):
         self.pipeline_desc += "%s " %sbin
