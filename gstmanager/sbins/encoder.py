@@ -84,7 +84,8 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
 
     def destroy(self):
         logger.debug("Unregistering event sos")
-        self.unregisterEvent("sos")
+        self.unregisterEvent("encoding_stopped")
+        self.unregisterEvent("encoding_started")
         self.size = 0
 
     def get_filename(self):
