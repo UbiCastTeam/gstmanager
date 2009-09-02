@@ -8,70 +8,73 @@ import logging
 import gobject
 logger = logging.getLogger('event')
 
-class EventManager:
-    """ Manages the event-system.
-    This class is instanciated on importing the module,
-    so it is not needed to use it directly but via EventLaunch and EventListener.
-    @cvar instance: The instance created on importing the module.
-    @type instance: C{L{EventManager}}
-    @ivar listeners: Dictionnary with keys of type C{str} representing a event type and with values of type C{list} representing a collection of C{EventListener}.
-    @type listeners: C{dict<str, list<L{EventListener}>>}
-    """
-    def __init__(self):
-        """ EventManager constructor. """
-        EventManager.instance = self
-        self.listeners = {}
+try:
+    from easycast.utils.event import EventManager
+except ImportError:
+    class EventManager:
+        """ Manages the event-system.
+        This class is instanciated on importing the module,
+        so it is not needed to use it directly but via EventLaunch and EventListener.
+        @cvar instance: The instance created on importing the module.
+        @type instance: C{L{EventManager}}
+        @ivar listeners: Dictionnary with keys of type C{str} representing a event type and with values of type C{list} representing a collection of C{EventListener}.
+        @type listeners: C{dict<str, list<L{EventListener}>>}
+        """
+        def __init__(self):
+            """ EventManager constructor. """
+            EventManager.instance = self
+            self.listeners = {}
+            
+        def addListener(self, obj, event_type):
+            """ Add a listener to a specific event.
+            @param obj: Listener to add.
+            @type obj: C{L{EventListener}}
+            @param event_type: Type of the event to listen.
+            @type event_type: C{str}
+            """
+            if event_type in self.listeners:
+                if obj not in self.listeners[event_type]:
+                    self.listeners[event_type].append(obj)
+            else:
+                self.listeners[event_type] = [obj]
         
-    def addListener(self, obj, event_type):
-        """ Add a listener to a specific event.
-        @param obj: Listener to add.
-        @type obj: C{L{EventListener}}
-        @param event_type: Type of the event to listen.
-        @type event_type: C{str}
-        """
-        if event_type in self.listeners:
-            if obj not in self.listeners[event_type]:
-                self.listeners[event_type].append(obj)
-        else:
-            self.listeners[event_type] = [obj]
-    
-    def removeListener(self, obj, event_type):
-        """ Remove a listener from a specific event.
-        @param obj: Listener to remove.
-        @type obj: C{L{EventListener}}
-        @param event_type: Type of the event that was listening.
-        @type event_type: C{str}
-        """
-        if event_type in self.listeners and obj in self.listeners[event_type]:
-            self.listeners[event_type].remove(obj)
-    
-    def dispatchEvent(self, event):
-        """ Dispatch a launched event to all affected listeners.
-        @param event: Event launched.
-        @type event: C{L{Event}}
-        """
-        if event.type in self.listeners:
-            for obj in self.listeners[event.type]:
-                # Try to call event-specific handle method
-                fctname = obj.event_pattern %(event.type)
-                if hasattr(obj, fctname):
-                    function = getattr(obj, fctname)
-                    if callable(function):
-                        gobject.idle_add(function, event)
-                        continue
-                    else:
-                        logger.warning('Event-specific handler found but not callable')
-                # Try to call default handle method
-                if hasattr(obj, obj.event_default):
-                    function = getattr(obj, obj.event_default)
-                    if callable(function):
-                        gobject.idle_add(function, event)
-                        continue
-                # No handle method found, raise error ?
-                if not obj.event_silent:
-                    raise UnhandledEventError("%s has no method to handle %s", obj, event)
-        else:
-            logger.error("Pas de event.type %s" % event.type)
+        def removeListener(self, obj, event_type):
+            """ Remove a listener from a specific event.
+            @param obj: Listener to remove.
+            @type obj: C{L{EventListener}}
+            @param event_type: Type of the event that was listening.
+            @type event_type: C{str}
+            """
+            if event_type in self.listeners and obj in self.listeners[event_type]:
+                self.listeners[event_type].remove(obj)
+        
+        def dispatchEvent(self, event):
+            """ Dispatch a launched event to all affected listeners.
+            @param event: Event launched.
+            @type event: C{L{Event}}
+            """
+            if event.type in self.listeners:
+                for obj in self.listeners[event.type]:
+                    # Try to call event-specific handle method
+                    fctname = obj.event_pattern %(event.type)
+                    if hasattr(obj, fctname):
+                        function = getattr(obj, fctname)
+                        if callable(function):
+                            gobject.idle_add(function, event)
+                            continue
+                        else:
+                            logger.warning('Event-specific handler found but not callable')
+                    # Try to call default handle method
+                    if hasattr(obj, obj.event_default):
+                        function = getattr(obj, obj.event_default)
+                        if callable(function):
+                            gobject.idle_add(function, event)
+                            continue
+                    # No handle method found, raise error ?
+                    if not obj.event_silent:
+                        raise UnhandledEventError("%s has no method to handle %s", obj, event)
+            else:
+                logger.error("Pas de event.type %s" % event.type)
 
 EventManager()
     
