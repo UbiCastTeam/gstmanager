@@ -8,11 +8,11 @@ from gstmanager.event import EventListener
 import logging
 logger = logging.getLogger("ogg-encoder")
 
-from gstmanager.profile import DefaultEncodingProfile
+from gstmanager.profiles.ogg import OggDefaultRecordingProfile
 
-class OggRecordingProfile(DefaultEncodingProfile):
+class OggRecordingProfile(OggDefaultRecordingProfile):
     def __init__(self):
-        DefaultEncodingProfile.__init__(self)
+        OggDefaultRecordingProfile.__init__(self)
         self.video_width = 640
         self.video_height = 480
 
@@ -55,7 +55,7 @@ class OggEncodingTestApp(SBinManager, PipelineManager):
         SBinManager.__init__(self)
         from gstmanager.sbins.encoders.ogg import OggEncoder
         profile = OggRecordingProfile()
-        self.encoder = encoder = OggEncoder(filename="/tmp/test.ogg", profile=profile)
+        self.encoder = encoder = OggEncoder(filename="/tmp/test", profile=profile)
         self.add_many(vsource, asource, previewsink, encoder)
         PipelineManager.__init__(self, self.pipeline_desc)
 
