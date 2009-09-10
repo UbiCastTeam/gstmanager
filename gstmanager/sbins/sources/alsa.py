@@ -4,8 +4,8 @@
 from gstmanager.sbins.source import AudioSource
 
 class AlsaSource(AudioSource):
-    def __init__(self, device_id="0"):
+    def __init__(self, device_id="0", latency-time="10000"):
         self.description = "Alsa source"
         self.type = "audio"
-        sbin = "alsasrc device=hw:%s,0 latency-time=300000" %device_id
+        sbin = "alsasrc device=hw:%s,0 latency-time=%s" %(device_id, latency-time)
         AudioSource.__init__(self, sbin)
