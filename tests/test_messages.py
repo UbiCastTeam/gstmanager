@@ -12,9 +12,10 @@ class Actioner(EventListener):
         logger.info("EOS Received")
 
     def evt_GstVideoAnalyse(self, event):
-        brightness = event.content["brightness"]
-        variance = event.content["brightness-variance"]
-        logger.info("Brightness: %s Variance: %s" %(brightness, variance))
+        source = event.content["source"]
+        brightness = event.content["data"]["brightness"]
+        variance = event.content["data"]["brightness-variance"]
+        logger.info("New message from %s Brightness: %s Variance: %s" %(source, brightness, variance))
 
 if __name__ == '__main__':
     import logging, sys

@@ -143,7 +143,8 @@ class PipelineManager(EventLauncher):
         elif t == gst.MESSAGE_ELEMENT:
             name = message.structure.get_name()
             res = message.structure
-            self.launchEvent(name, res)
+            source = (str(message.src)).split(":")[2].split(" ")[0]
+            self.launchEvent(name, {"source": source, "data": res})
         else:
             if self.send_debug:
                 logger.debug( "got unhandled message type %s, structure %s" %(t, message))
