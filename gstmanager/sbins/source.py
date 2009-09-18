@@ -10,9 +10,9 @@ class AVSource(object):
 class AudioSource(object):
     def __init__(self, sbin_content):
         self.tags = ["a_src"]
-        self.sbin = "%s ! queue ! tee name=%s_tee" %(sbin_content, self.tags[0])
+        self.sbin = "%s ! tee name=%s_tee" %(sbin_content, self.tags[0])
 
 class VideoSource(object):
     def __init__(self, sbin_content):
         self.tags = ["v_src"]
-        self.sbin = "%s ! queue ! tee name=%s_tee" %(sbin_content, self.tags[0])
+        self.sbin = "%s ! tee name=%s_tee" %(sbin_content, self.tags[0])
