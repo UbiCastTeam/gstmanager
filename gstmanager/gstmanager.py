@@ -49,7 +49,8 @@ class PipelineManager(EventLauncher):
     def parse_description(self, string):
         self.pipeline_desc = string
         self.pipeline = gst.parse_launch(string)
-        logger.info("parsing pipeline description in %s: %s" %(self.pipeline.get_name(), string))
+        hstring = self.get_pastable_string(string)
+        logger.debug("Launching pipeline %s; copy-paste the following for manual debugging: \n\ngst-launch-0.10 %s\n" %(self.pipeline.get_name(), hstring))
         self.activate_bus()
 
     def activate_bus(self):
@@ -155,6 +156,15 @@ class PipelineManager(EventLauncher):
         else:
             time = time / 1000000000
         return time
+
+    def get_pastable_string(self, string):
+        hstring = string
+        parts = string.split(" ! ")
+        for part in parts:
+            if part.startswith("video/") or part.startswith("audio/") or part.startswith("image/"):
+                hpart = '"%s"' %part
+                hstring = hstring.replace(part, hpart)
+        return hstring
 
 if __name__ == '__main__':
 
