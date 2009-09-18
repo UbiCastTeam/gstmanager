@@ -10,12 +10,22 @@ if __name__ == '__main__':
         stream=sys.stderr
     )
 
+    sbins = []
+
+    from gstmanager.detectors.alsa import AlsaDetector
+    a = AlsaDetector()
+    a.detect_devices()
+
+    from gstmanager.sbins.sources.alsa import AlsaSource
+    for device in a.devices_list:
+        alsa_sbin = AlsaSource(device_id=device)
+        sbins.append(alsa_sbin)
+
     from gstmanager.detectors.v4l import V4LDetector
     d_v4l = V4LDetector()
     d_v4l.detect_devices()
 
     from gstmanager.sbins.sources.v4l import V4LSource
-    sbins = []
     for device in d_v4l.devices_list:
         v4l_sbin = V4LSource(device_id=device)
         sbins.append(v4l_sbin)
