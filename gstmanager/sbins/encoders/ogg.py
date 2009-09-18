@@ -26,10 +26,10 @@ class OggMuxer(Muxer):
         Muxer.__init__(self, sbin)
 
 from gstmanager.sbins.encoder import FileEncoder
-from gstmanager.profile import DefaultEncodingProfile
+from gstmanager.profiles.ogg import OggDefaultRecordingProfile
 
 class OggEncoder(FileEncoder):
-    def __init__(self, filename="/tmp/test.ogg",profile=DefaultEncodingProfile()):
+    def __init__(self, filename="/tmp/test.ogg",profile=OggDefaultRecordingProfile()):
         filename = "%s.%s" %(filename, profile.extension)
         FileEncoder.__init__(self, filename)
 
