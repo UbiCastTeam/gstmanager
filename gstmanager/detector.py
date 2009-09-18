@@ -6,15 +6,28 @@ logger = logging.getLogger('detector')
 
 class ParserBasedDetector(object):
     def __init__(self, file_path):
-        self.file_path = file_path
-        # TODO: regexp passing and parsing
-        # Example with alsa: /proc/asound/devices
+        file_path = file_path
+        file = open(file_path)
+        self.data = file.readlines()
+        file.close()
+        self.devices_list = []
+
+    def detect_devices(self):
+        self.parse()
+        return self.devices_list
+
+    def parse(self):
+        # Surclass this
+        for line in self.data:
+            self.devices_list.append(line)
+        del(data)
 
 class FileBasedDetector(object):
     def __init__(self, file_pattern, type_desc):
         self.file_pattern = file_pattern
         self.type = type_desc
         self.devices_list = []
+        #TODO: use glob
 
     def detect_devices(self):
         i = 0
