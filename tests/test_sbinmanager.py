@@ -17,14 +17,8 @@ v = VideoTestSource()
 from gstmanager.sbins.sinks.ximagesink import XImageSink
 s = XImageSink()
 
-from gstmanager.sbins.analysis.brightness import BrightnessVideoAnalyse
-a = BrightnessVideoAnalyse()
-
 from gstmanager.sbins.sources.audiotest import AudioTestSource
 s2 = AudioTestSource()
-
-from gstmanager.sbins.analysis.level import LevelAnalyser
-a2 = LevelAnalyser()
 
 from gstmanager.sbins.sinks.alsa import AlsaSink
 s3 = AlsaSink()
@@ -44,7 +38,7 @@ man.add(a2)
 man.add(s3)
 man.add(e)
 '''
-man.add_many(v, s, a, s2, a2, s3, e)
+man.add_many(v, s, s2, s3, e)
 
 if __name__ == '__main__':
 
