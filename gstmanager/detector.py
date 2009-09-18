@@ -5,15 +5,18 @@ import logging
 logger = logging.getLogger('detector')
 
 class ParserBasedDetector(object):
-    def __init__(self, file_path):
+    def __init__(self, file_path, type_desc):
         file_path = file_path
         file = open(file_path)
         self.data = file.readlines()
+        self.type = type_desc
         file.close()
         self.devices_list = []
 
     def detect_devices(self):
         self.parse()
+        for device in self.devices_list:
+            logger.debug("Found %s device with id %s" %(self.type, device))
         return self.devices_list
 
     def parse(self):

@@ -5,7 +5,7 @@ from gstmanager.detector import ParserBasedDetector
 
 class AlsaDetector(ParserBasedDetector):
     def __init__(self):
-        ParserBasedDetector.__init__(self, "/proc/asound/cards")
+        ParserBasedDetector.__init__(self, "/proc/asound/cards", "Alsa sound card")
 
     def parse(self):
         nb_devices = len(self.data)/2
