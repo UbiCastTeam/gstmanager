@@ -60,7 +60,7 @@ class VideoEncoder(object):
         self.profile = profile
         self.tags = ["v_src_tee"]
         self.enc_tag = "v_enc_%s_tee" %VideoEncoder.index
-        self.caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)%s, height=(int)%s, framerate=(fraction)25/1" %(profile.video_width, profile.video_height)
+        self.caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)%s, height=(int)%s, framerate=(fraction)%s/1" %(profile.video_width, profile.video_height, profile.video_framerate)
         sbin_begin = "%s. ! queue ! ffmpegcolorspace ! videorate ! videoscale ! %s !" %(self.tags[0], self.caps)
         sbin_end = "! queue ! tee name=%s" %self.enc_tag
         self.sbin = "%s %s name=vencoder_%s %s" %(sbin_begin, sbin_content, VideoEncoder.index, sbin_end)
@@ -102,8 +102,12 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
     def evt_encoding_started(self, event):
         logger.info("evt_encoder_started: Starting filesize checking")
         self.is_running = True
-        gobject.timeout_add(1000, self.check_file_growth)
+        gobject.timeout_add(3000, self.start_file_checking)
         self.launchEvent("encoding_filename", self.get_filename())
+
+    def start_file_checking(self):
+        gobject.timeout_add(1000, self.check_file_growth)
+        return False
 
     def evt_encoding_stopped(self, event):
         logger.info("EOS: Stopping filesize checking")
