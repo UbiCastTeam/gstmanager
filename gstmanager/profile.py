@@ -14,6 +14,7 @@ class DefaultEncodingProfile(EventLauncher, EventListener):
         # In kbits/s
         self.video_width = 320 
         self.video_height = 240
+        self.framerate = 25
         self.registerEvent("sos")
 
     def get_string(self):
