@@ -31,7 +31,9 @@ class PipelineManager(EventLauncher):
     def redefine_pipeline(self, widget=None, new_string=None):
         if new_string is None:
             new_string = self.pipeline_desc
-            logger.debug('Reinitializing %s pipeline to %s' %(self.get_name(), new_string))
+            logger.debug("Reinitializing pipeline")
+        else:
+            logger.debug('Redefining pipeline %s pipeline to %s' %(self.get_name(), new_string))
         self.parse_description(new_string)
 
     def is_running(self):
@@ -138,9 +140,11 @@ class PipelineManager(EventLauncher):
         t = message.type
         if t == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
-            logger.info("Error: %s %s" %(err, debug))
+            error_string = "%s %s" %(err, debug)
+            logger.info("Error: %s" %error_string)
+            self.launchEvent("gst_error", error_string)
         elif t == gst.MESSAGE_EOS:
-            self.launchEvent("eos")
+            self.launchEvent("eos", self.get_name())
         elif t == gst.MESSAGE_ELEMENT:
             name = message.structure.get_name()
             res = message.structure
