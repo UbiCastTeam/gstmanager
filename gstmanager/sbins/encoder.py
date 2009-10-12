@@ -116,7 +116,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
 
     def check_file_growth(self):
         new_size = self.get_filesize()
-        logger.debug("Current file size is %s" %new_size)
+        #logger.debug("Current file size is %s" %new_size)
         if new_size <= self.size and self.is_running:
             logger.error("File %s growth stalled !" %self.filename)
             self.launchEvent("encoding_error", "Encoding of %s stopped" %self.filename)
