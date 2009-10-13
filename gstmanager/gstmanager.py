@@ -108,7 +108,7 @@ class PipelineManager(EventLauncher):
         gst.Element.send_event(self.pipeline, event)
 
     def set_caps(self, caps_name="capsfilter", caps=None):
-        logger.info("Setting caps %s on capsfilter named " %(caps, caps_name))
+        logger.info("Setting caps %s on capsfilter named %s" %(caps, caps_name))
         capsfilter = self.pipeline.get_by_name(caps_name)
         GstCaps = gst.caps_from_string(caps)
         capsfilter.set_property("caps",GstCaps)
