@@ -130,6 +130,18 @@ class PipelineManager(EventLauncher):
         out_pad = elt.get_pad("src")
         out_pad.set_setcaps_function(self.send_caps)
 
+    def activate_polling_of_property_on_element(self, element_name="whatever", property="property", interval_ms=1000):
+        gobject.timeout_add(interval_ms, self.poll_property, element_name, property)
+        self.do_poll = True
+
+    def deactivate_pollings(self):
+        self.do_poll = False
+
+    def poll_property(self, element_name, property):
+        value = self.get_property_on_element(element_name, property)
+        self.launchEvent("%s_value_change" %property, {"source": element_name, "property": property, "value": value})
+        return self.do_poll
+
     def send_caps(self, pad, caps):
         logger.debug("Got negociated caps")
         caps_str = caps.to_string()
