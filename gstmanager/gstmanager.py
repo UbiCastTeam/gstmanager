@@ -12,11 +12,11 @@ logger = logging.getLogger('gstmanager')
 
 import gst
 pipeline_desc = "videotestsrc ! xvimagesink"
-from event import EventLauncher
+import easyevent
 
-class PipelineManager(EventLauncher):
+class PipelineManager(easyevent.User):
     def __init__(self, pipeline_string=None):
-        EventLauncher.__init__(self)
+        easyevent.User.__init__(self)
         self.send_debug = False
         if pipeline_string is not None: 
             self.parse_description(pipeline_string)
@@ -62,7 +62,7 @@ class PipelineManager(EventLauncher):
 
     def run(self, *args):
         logger.info("Starting pipeline %s" %self.get_name())
-        self.launchEvent("sos", self.get_name())
+        self.launch_event("sos", self.get_name())
         self.pipeline.set_state(gst.STATE_PLAYING)
         # Returning false if it was called by a gobject.timeout 
         return False
@@ -139,13 +139,13 @@ class PipelineManager(EventLauncher):
 
     def poll_property(self, element_name, property):
         value = self.get_property_on_element(element_name, property)
-        self.launchEvent("%s_value_change" %property, {"source": element_name, "property": property, "value": value})
+        self.launch_event("%s_value_change" %property, {"source": element_name, "property": property, "value": value})
         return self.do_poll
 
     def send_caps(self, pad, caps):
         logger.debug("Got negociated caps")
         caps_str = caps.to_string()
-        self.launchEvent("caps", caps_str)
+        self.launch_event("caps", caps_str)
         return True
 
     def on_message(self, bus, message):
@@ -154,14 +154,14 @@ class PipelineManager(EventLauncher):
             err, debug = message.parse_error()
             error_string = "%s %s" %(err, debug)
             logger.info("Error: %s" %error_string)
-            self.launchEvent("gst_error", error_string)
+            self.launch_event("gst_error", error_string)
         elif t == gst.MESSAGE_EOS:
-            self.launchEvent("eos", self.get_name())
+            self.launch_event("eos", self.get_name())
         elif t == gst.MESSAGE_ELEMENT:
             name = message.structure.get_name()
             res = message.structure
             source = (str(message.src)).split(":")[2].split(" ")[0]
-            self.launchEvent(name, {"source": source, "data": res})
+            self.launch_event(name, {"source": source, "data": res})
         else:
             if self.send_debug:
                 logger.debug( "got unhandled message type %s, structure %s" %(t, message))
