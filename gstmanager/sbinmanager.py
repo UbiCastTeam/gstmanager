@@ -9,7 +9,7 @@ class SBinManager(object):
         self.pipeline_desc = ""
         self.check_for_compat = True
 
-    def add(self, element):
+    def add_sbin(self, element):
         if self.check_for_compat and element.type.find("source")!= -1:
             if element.sbin.find("tee name=%s_tee" %element.tags[0])!=-1:
                 logger.info("Adding %s source %s to pipeline" %(element.type, element.description))
@@ -31,7 +31,7 @@ class SBinManager(object):
     def add_many(self, *args):
         for element in args:
             if element is not None:
-                self.add(element)
+                self.add_sbin(element)
 
     def _add_sbin(self, sbin):
         self.pipeline_desc += "%s " %sbin
