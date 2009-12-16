@@ -33,13 +33,10 @@ class OggEncoder(FileEncoder):
         filename = "%s.%s" %(filename, profile.extension)
         FileEncoder.__init__(self, filename)
 
-
         self.venc = TheoraEncoder(profile)
         self.aenc = VorbisEncoder(profile)
         self.muxer = OggMuxer()
-        self.add(self.venc)
-        self.add(self.aenc)
-        self.add(self.muxer)
+        self.add_many(self.venc, self.aenc, self.muxer)
         self.tags = ["a_src", "v_src"]
         self.type = "audio-video"
         self.description = "Ogg to File Encoder"
