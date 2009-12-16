@@ -30,7 +30,6 @@ from gstmanager.profiles.ogg import OggDefaultRecordingProfile
 
 class OggEncoder(FileEncoder):
     def __init__(self, filename="/tmp/test.ogg",profile=OggDefaultRecordingProfile()):
-        filename = "%s.%s" %(filename, profile.extension)
         FileEncoder.__init__(self, filename)
 
         self.venc = TheoraEncoder(profile)
