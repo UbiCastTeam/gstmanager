@@ -10,3 +10,4 @@ class OggDefaultRecordingProfile(DefaultEncodingProfile):
         self.video_bitrate = 2000
         self.audio_bitrate = 128000
         self.video_quality = 16
+        self.video_framerate = 25
