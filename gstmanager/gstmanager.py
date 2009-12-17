@@ -75,7 +75,7 @@ class PipelineManager(easyevent.User):
         self.pipeline.set_state(gst.STATE_PAUSED)
 
     def stop(self, *args):
-        logger.info( "Stopping pipeline")
+        logger.info("Stopping pipeline %s" %self.get_name())
         self.pipeline.set_state(gst.STATE_NULL)
 
     def get_state(self, *args):

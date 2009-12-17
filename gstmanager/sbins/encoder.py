@@ -6,8 +6,8 @@ logger = logging.getLogger("encoder")
 
 import datetime
 from gstmanager.profile import DefaultEncodingProfile
-from gstmanager.event import EventLauncher, EventListener
 
+import easyevent
 """
 List of encoder-related signals
 
@@ -22,15 +22,15 @@ Sent signals:
  * encoding_progress: sends updated file size
 """
 
-class ProgressInfo(EventListener):
+class ProgressInfo(easyevent.User):
     def __init__(self):
-        EventListener.__init__(self)
+        easyevent.User.__init__(self)
         self.start_time = datetime.datetime.now()
         self.hduration = "0:00:00"
         self.size = 0
         self.location = None
-        self.registerEvent("encoding_filename")
-        self.registerEvent("encoding_started")
+        self.register_event("encoding_filename")
+        self.register_event("encoding_started")
 
     def update(self, size):
         self.size = size
@@ -69,23 +69,22 @@ class VideoEncoder(object):
 from gstmanager.sbinmanager import SBinManager
 import gobject, os
 
-class FileEncoder(SBinManager, EventLauncher, EventListener):
+class FileEncoder(SBinManager, easyevent.User):
     def __init__(self, filename):
         SBinManager.__init__(self)
-        EventListener.__init__(self)
-        EventLauncher.__init__(self)
+        easyevent.User.__init__(self)
         self.progress = ProgressInfo() 
         self.check_for_compat = False
         self.filename = filename
         self.size = 0
         self.is_running = False
-        self.registerEvent("encoding_started")
-        self.registerEvent("encoding_stopped")
+        self.register_event("encoding_started")
+        self.register_event("encoding_stopped")
 
     def destroy(self):
         logger.debug("Unregistering event sos")
-        self.unregisterEvent("encoding_stopped")
-        self.unregisterEvent("encoding_started")
+        self.unregister_event("encoding_stopped")
+        self.unregister_event("encoding_started")
         self.size = 0
 
     def get_filename(self):
@@ -103,7 +102,7 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         logger.info("evt_encoder_started: Starting filesize checking")
         self.is_running = True
         gobject.timeout_add(3000, self.start_file_checking)
-        self.launchEvent("encoding_filename", self.get_filename())
+        self.launch_event("encoding_filename", self.get_filename())
 
     def start_file_checking(self):
         gobject.timeout_add(1000, self.check_file_growth)
@@ -119,11 +118,11 @@ class FileEncoder(SBinManager, EventLauncher, EventListener):
         #logger.debug("Current file size is %s" %new_size)
         if new_size <= self.size and self.is_running:
             logger.error("File %s growth stalled !" %self.filename)
-            self.launchEvent("encoding_error", "Encoding of %s stopped" %self.filename)
+            self.launch_event("encoding_error", "Encoding of %s stopped" %self.filename)
             return False
         elif not self.is_running:
             return False
         elif self.is_running:
             self.progress.update(new_size)
-            self.launchEvent("encoding_progress", self.progress)            
+            self.launch_event("encoding_progress", self.progress)            
             return True

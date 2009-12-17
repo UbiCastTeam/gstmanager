@@ -23,6 +23,3 @@ class DefaultEncodingProfile(EventLauncher, EventListener):
     def get_total_bitrate(self):
         total_bitrate = self.video_bitrate + self.audio_bitrate/1000
         return total_bitrate
-
-    def evt_sos(self, event):
-        self.launchEvent("encoding_properties", self.get_total_bitrate())

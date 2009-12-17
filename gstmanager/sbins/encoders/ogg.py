@@ -8,7 +8,7 @@ class TheoraEncoder(VideoEncoder):
     def __init__(self, profile):
         self.description = "Theora encoder"
         self.type = "video"
-        sbin = "theoraenc bitrate=%s quality=%s" %(profile.video_bitrate, profile.video_quality)
+        sbin = "theoraenc bitrate=%s quality=%s keyframe-auto=False keyframe-force=%s keyframe-freq=%s" %(profile.video_bitrate, profile.video_quality, profile.keyframe_freq, profile.keyframe_freq)
         VideoEncoder.__init__(self, sbin, profile=profile)
 
 class VorbisEncoder(AudioEncoder):
