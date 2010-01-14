@@ -15,13 +15,17 @@ pipeline_desc = "videotestsrc ! xvimagesink"
 import easyevent
 
 class PipelineManager(easyevent.User):
-    def __init__(self, pipeline_string=None):
+    def __init__(self, pipeline_string=None, name=None):
         easyevent.User.__init__(self)
         self.send_debug = False
+        self.name = name
         if pipeline_string is not None: 
             self.parse_description(pipeline_string)
         else:
-            self.pipeline = gst.Pipeline()
+            if name is not None:
+                self.pipeline = gst.Pipeline(name)
+            else:
+                self.pipeline = gst.Pipeline()
             self.activate_bus()
 
     def get_name(self):
@@ -51,6 +55,8 @@ class PipelineManager(easyevent.User):
     def parse_description(self, string):
         self.pipeline_desc = string
         self.pipeline = gst.parse_launch(string)
+        if self.name is not None:
+            self.pipeline.set_name(self.name)
         hstring = self.get_pastable_string(string)
         logger.debug("Launching pipeline %s; copy-paste the following for manual debugging: \n\ngst-launch-0.10 %s\n" %(self.pipeline.get_name(), hstring))
         self.activate_bus()
@@ -62,7 +68,7 @@ class PipelineManager(easyevent.User):
 
     def run(self, *args):
         logger.info("Starting pipeline %s" %self.get_name())
-        self.launch_event("sos", self.get_name())
+        self.launch_event("sos", self.pipeline)
         self.pipeline.set_state(gst.STATE_PLAYING)
         # Returning false if it was called by a gobject.timeout 
         return False
