@@ -32,6 +32,10 @@ class ProgressInfo(easyevent.User):
         self.register_event("encoding_filename")
         self.register_event("encoding_started")
 
+    def destroy(self):
+        self.unregister_event("encoding_filename")
+        self.unregister_event("encoding_started")
+
     def update(self, size):
         self.size = size
         self.duration = dur = datetime.datetime.now() - self.start_time
@@ -83,6 +87,7 @@ class FileEncoder(SBinManager, easyevent.User):
 
     def destroy(self):
         logger.debug("Unregistering event sos")
+        self.progress.destroy()
         self.unregister_event("encoding_stopped")
         self.unregister_event("encoding_started")
         self.size = 0
