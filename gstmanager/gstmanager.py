@@ -37,7 +37,7 @@ class PipelineManager(easyevent.User):
             new_string = self.pipeline_desc
             logger.debug("Reinitializing pipeline")
         else:
-            logger.debug('Redefining pipeline %s pipeline to %s' %(self.get_name(), new_string))
+            logger.debug('Redefining pipeline %s pipeline to %s' %(self.pipeline.get_name(), new_string))
         self.parse_description(new_string)
 
     def is_running(self):
@@ -162,7 +162,7 @@ class PipelineManager(easyevent.User):
             logger.info("Error: %s" %error_string)
             self.launch_event("gst_error", error_string)
         elif t == gst.MESSAGE_EOS:
-            self.launch_event("eos", self.get_name())
+            self.launch_event("eos", self.pipeline.get_name())
         elif t == gst.MESSAGE_ELEMENT:
             name = message.structure.get_name()
             res = message.structure

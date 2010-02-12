@@ -114,7 +114,7 @@ class FileEncoder(SBinManager, easyevent.User):
         return False
 
     def evt_encoding_stopped(self, event):
-        logger.info("EOS: Stopping filesize checking")
+        logger.info("evt encoding stopped: Stopping filesize checking")
         self.is_running = False
         self.size = 0
 
