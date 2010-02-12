@@ -67,7 +67,7 @@ class PipelineManager(easyevent.User):
         self.bus.connect('message', self.on_message)
 
     def run(self, *args):
-        logger.info("Starting pipeline %s" %self.get_name())
+        logger.info("Starting pipeline %s" %self.pipeline.get_name())
         self.launch_event("sos", self.pipeline)
         self.pipeline.set_state(gst.STATE_PLAYING)
         # Returning false if it was called by a gobject.timeout 
@@ -81,7 +81,7 @@ class PipelineManager(easyevent.User):
         self.pipeline.set_state(gst.STATE_PAUSED)
 
     def stop(self, *args):
-        logger.info("Stopping pipeline %s" %self.get_name())
+        logger.info("Stopping pipeline %s" %self.pipeline.get_name())
         self.pipeline.set_state(gst.STATE_NULL)
 
     def get_state(self, *args):
