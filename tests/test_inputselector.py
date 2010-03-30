@@ -11,7 +11,9 @@ def set_input(pipelinel, value):
 if __name__ == '__main__':
 
     from gstmanager.gstmanager import PipelineManager
-    pipeline_desc = "videotestsrc is-live=true ! cairotimeoverlay ! queue ! input-selector name=select ! tee name=tee ! queue ! theoraenc ! oggmux name=mux ! filesink location=/tmp/test.ogg tee. ! queue ! xvimagesink videotestsrc pattern=2 is-live=true ! cairotimeoverlay ! queue ! select. audiotestsrc is-live=true ! vorbisenc ! queue ! mux."
+    vcaps = "image/jpeg, framerate=(fraction)25/1"
+    vcaps_2 = "video/x-raw-yuv, format=(fourcc)I420, width=(int)320, height=(int)240, framerate=(fraction)30/1"
+    pipeline_desc = "souphttpsrc location=http://192.168.40.124/image is-live=True ! queue ! multipartdemux ! %s ! jpegdec ! videorate ! videoscale ! %s ! queue ! input-selector name=select ! tee name=tee ! queue ! theoraenc ! oggmux name=mux ! filesink location=/tmp/test.ogg tee. ! queue ! xvimagesink sync=false videotestsrc is-live=true ! cairotimeoverlay ! videorate ! videoscale ! %s ! queue ! select. audiotestsrc is-live=true ! vorbisenc ! queue ! mux." %(vcaps, vcaps_2, vcaps_2)
 
     pipelinel = PipelineManager(pipeline_desc)
     pipelinel.run()
