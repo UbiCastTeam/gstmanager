@@ -54,7 +54,11 @@ class PipelineManager(easyevent.User):
 
     def parse_description(self, string):
         self.pipeline_desc = string
-        self.pipeline = gst.parse_launch(string)
+        try:
+            self.pipeline = gst.parse_launch(string)
+        except Exception, e:
+            logger.error('Error in parse_description: %s' %e)
+            self.launch_event('gst_error', e)
         if self.name is not None:
             self.pipeline.set_name(self.name)
         hstring = self.get_pastable_string(string)
