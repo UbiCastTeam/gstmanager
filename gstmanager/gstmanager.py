@@ -57,6 +57,8 @@ class PipelineManager(easyevent.User):
         try:
             self.pipeline = gst.parse_launch(string)
         except Exception, e:
+            if self.name is not None:
+                e = "%s : %s" %(self.name, e)
             logger.error('Error in parse_description: %s' %e)
             self.launch_event('gst_error', e)
             return
