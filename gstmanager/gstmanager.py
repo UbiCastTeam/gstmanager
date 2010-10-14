@@ -89,7 +89,10 @@ class PipelineManager(easyevent.User):
 
     def stop(self, *args):
         logger.info("Stopping pipeline %s" %self.pipeline.get_name())
-        self.pipeline.set_state(gst.STATE_NULL)
+        if hasattr(self, 'pipeline'):
+            self.pipeline.set_state(gst.STATE_NULL)
+        else:
+            logger.error('Cannot stop non-running pipeline')
 
     def get_state(self, *args):
         state = self.pipeline.get_state()[1]
