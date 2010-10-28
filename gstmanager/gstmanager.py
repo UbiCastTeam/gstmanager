@@ -6,7 +6,7 @@ gstmanager: convenience fonctions for gstreamer pipeline manipulation
 @author Florent Thiery
 """
 
-import logging
+import logging, os
 import gobject
 logger = logging.getLogger('gstmanager')
 
@@ -99,12 +99,20 @@ class PipelineManager(easyevent.User):
         return state.value_name
 
     def get_position(self, *args):
-        position = self.pipeline.query_position(gst.FORMAT_TIME)[0]
-        return self.convert_time_to_seconds(position)
+        try:
+            position = self.pipeline.query_position(gst.FORMAT_TIME)[0]
+            return self.convert_time_to_seconds(position)
+        except gst.QueryError:
+            logger.error('Position query failed')
+            return 0
 
     def get_duration(self, *args):
-        duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0]
-        return self.convert_time_to_seconds(duration)
+        try:
+            duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0]
+            return self.convert_time_to_seconds(duration)
+        except gst.QueryError:
+            logger.error('Duration query failed')
+            return 0
 
     def has_duration(self):
         duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0]
@@ -181,6 +189,20 @@ class PipelineManager(easyevent.User):
         else:
             if self.send_debug:
                 logger.debug( "got unhandled message type %s, structure %s" %(t, message))
+
+    def dump_dot_file(self, basename='pipeline'):
+        directory = os.environ.get('GST_DEBUG_DUMP_DOT_DIR', None)
+        if directory:
+            dotfile = os.path.join(directory, '%s.dot' %basename)
+            if os.path.isfile(dotfile):
+                logger.debug('Removing existing dotfile %s' %dotfile)
+                os.remove(dotfile)
+            logger.debug('Dumping graph to %s' %dotfile)
+            gst.DEBUG_BIN_TO_DOT_FILE (self.pipeline, gst.DEBUG_GRAPH_SHOW_ALL, basename)
+            return dotfile
+        else:
+            logger.error('You need to define the GST_DEBUG_DUMP_DOT_DIR env var to dump a .dot graph of the running pipeline')
+            return None
 
     def convert_time_to_seconds(self, time):
         if time == -1:
