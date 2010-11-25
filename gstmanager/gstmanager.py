@@ -17,7 +17,6 @@ import easyevent
 class PipelineManager(easyevent.User):
     def __init__(self, pipeline_string=None, name=None):
         easyevent.User.__init__(self)
-        self.send_debug = False
         self.name = name
         if pipeline_string is not None: 
             self.parse_description(pipeline_string)
@@ -187,8 +186,8 @@ class PipelineManager(easyevent.User):
             source = (str(message.src)).split(":")[2].split(" ")[0]
             self.launch_event(name, {"source": source, "data": res})
         else:
-            if self.send_debug:
-                logger.debug( "got unhandled message type %s, structure %s" %(t, message))
+            #logger.debug( "got unhandled message type %s, structure %s" %(t, message))
+            pass
 
     def dump_dot_file(self, basename='pipeline'):
         directory = os.environ.get('GST_DEBUG_DUMP_DOT_DIR', None)
