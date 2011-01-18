@@ -40,3 +40,17 @@ class OggEncoder(FileEncoder):
         self.type = "audio-video"
         self.description = "Ogg to File Encoder"
         self.sbin = "%s muxer_tee. ! filesink location=%s" %(self.pipeline_desc, filename)
+
+class MkvTheoraEncoder(FileEncoder):
+    def __init__(self, filename="/tmp/test.mkv",profile=OggDefaultRecordingProfile()):
+        FileEncoder.__init__(self, filename)
+
+        self.venc = TheoraEncoder(profile)
+        self.aenc = VorbisEncoder(profile)
+        from mjpeg import MkvMuxer
+        self.muxer = MkvMuxer()
+        self.add_many(self.venc, self.aenc, self.muxer)
+        self.tags = ["a_src", "v_src"]
+        self.type = "audio-video"
+        self.description = "Mkv/Theora/Vorbis to File Encoder"
+        self.sbin = "%s muxer_tee. ! filesink location=%s" %(self.pipeline_desc, filename)
