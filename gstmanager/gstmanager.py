@@ -7,6 +7,7 @@ gstmanager: convenience fonctions for gstreamer pipeline manipulation
 """
 
 import logging, os
+
 import gobject
 logger = logging.getLogger('gstmanager')
 
@@ -185,6 +186,7 @@ class PipelineManager(easyevent.User):
             res = message.structure
             source = (str(message.src)).split(":")[2].split(" ")[0]
             self.launch_event(name, {"source": source, "data": res})
+            self.launch_event('gst_element_message', {"source": source, "name": name, "data": res})
         else:
             #logger.debug( "got unhandled message type %s, structure %s" %(t, message))
             pass
