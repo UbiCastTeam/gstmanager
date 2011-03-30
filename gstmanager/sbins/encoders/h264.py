@@ -17,5 +17,5 @@ class AACEncoder(AudioEncoder):
     def __init__(self, profile=DefaultEncodingProfile()):
         self.description = "AAC encoder"
         self.type = "audio"
-        sbin = "faac bitrate=%s" %profile.audio_bitrate
+        sbin = "faac bitrate=%s profile=2" %profile.audio_bitrate
         AudioEncoder.__init__(self, sbin)
