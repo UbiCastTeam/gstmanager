@@ -18,6 +18,13 @@ class VorbisEncoder(AudioEncoder):
         sbin = "vorbisenc bitrate=%s" %profile.audio_bitrate
         AudioEncoder.__init__(self, sbin)
 
+class IdentityEncoder(AudioEncoder):
+    def __init__(self, profile):
+        self.description = "Identity encoder"
+        self.type = "audio"
+        sbin = "identity silent=true" 
+        AudioEncoder.__init__(self, sbin)
+
 class MkvMuxer(Muxer):
     def __init__(self):
         self.description = "Mkv Muxer"
@@ -32,7 +39,8 @@ class MjpegEncoder(FileEncoder):
     def __init__(self, filename="/tmp/test.mkv",profile=OggDefaultRecordingProfile()):
         FileEncoder.__init__(self, filename)
         self.venc = JpegEncoder(profile)
-        self.aenc = VorbisEncoder(profile)
+        self.aenc = IdentityEncoder(profile)
+        #self.aenc = VorbisEncoder(profile)
         self.muxer = MkvMuxer()
         self.add_many(self.venc, self.aenc, self.muxer)
         self.tags = ["a_src", "v_src"]
