@@ -8,7 +8,8 @@ class JpegEncoder(VideoEncoder):
     def __init__(self, profile):
         self.description = "Jpeg encoder"
         self.type = "video"
-        sbin = "jpegenc"
+        #sbin = "jpegenc"
+        sbin = "ffenc_mjpeg bitrate=40000000"
         VideoEncoder.__init__(self, sbin, profile=profile)
 
 class VorbisEncoder(AudioEncoder):
