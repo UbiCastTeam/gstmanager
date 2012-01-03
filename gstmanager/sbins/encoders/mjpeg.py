@@ -30,7 +30,7 @@ class MkvMuxer(Muxer):
     def __init__(self):
         self.description = "Mkv Muxer"
         self.type = "audio/video"
-        sbin = "matroskamux"
+        sbin = "matroskamux min-index-interval=1000000000"
         Muxer.__init__(self, sbin)
 
 from gstmanager.sbins.encoder import FileEncoder
