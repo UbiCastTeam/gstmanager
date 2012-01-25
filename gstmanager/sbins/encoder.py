@@ -27,6 +27,7 @@ class ProgressInfo(easyevent.User):
         easyevent.User.__init__(self)
         self.start_time = datetime.datetime.now()
         self.hduration = "0:00:00"
+        self.duration = datetime.datetime.now() - self.start_time
         self.size = 0
         self.location = None
         self.register_event("encoding_filename")
@@ -106,7 +107,8 @@ class FileEncoder(SBinManager, easyevent.User):
     def evt_encoding_started(self, event):
         logger.info("evt_encoder_started: Starting filesize checking")
         self.is_running = True
-        gobject.timeout_add(3000, self.start_file_checking)
+        self.start_file_checking()
+        #gobject.timeout_add(3000, self.start_file_checking)
         self.launch_event("encoding_filename", self.get_filename())
 
     def start_file_checking(self):
@@ -121,8 +123,8 @@ class FileEncoder(SBinManager, easyevent.User):
     def check_file_growth(self):
         new_size = self.get_filesize()
         #logger.debug("Current file size is %s" %new_size)
-        if new_size <= self.size and self.is_running:
-            logger.error("File %s growth stalled !" %self.filename)
+        if new_size <= self.size and self.is_running and self.progress.duration.seconds > 10 :
+            logger.error("File %s growth stalled after 10 seconds" %self.filename)
             self.launch_event("encoding_error", "Encoding of %s stopped" %self.filename)
             return False
         elif not self.is_running:
