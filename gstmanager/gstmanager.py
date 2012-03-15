@@ -127,7 +127,7 @@ class PipelineManager(easyevent.User):
         self.pipeline.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, getter()*1000000000)
 
     def send_eos(self, *args):
-        logger.info("Sending EOS")
+        logger.info("Sending EOS on %s" %self.pipeline.get_name())
         event = gst.event_new_eos()
         gst.Element.send_event(self.pipeline, event)
 

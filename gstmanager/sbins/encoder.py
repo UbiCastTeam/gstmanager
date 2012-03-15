@@ -119,6 +119,7 @@ class FileEncoder(SBinManager, easyevent.User):
         logger.info("evt encoding stopped: Stopping filesize checking")
         self.is_running = False
         self.size = 0
+        self.progress = ProgressInfo() 
 
     def check_file_growth(self):
         new_size = self.get_filesize()
