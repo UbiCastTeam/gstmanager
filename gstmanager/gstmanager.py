@@ -187,6 +187,12 @@ class PipelineManager(easyevent.User):
             source = (str(message.src)).split(":")[2].split(" ")[0]
             self.launch_event(name, {"source": source, "data": res})
             self.launch_event('gst_element_message', {"source": source, "name": name, "data": res})
+        elif t == gst.MESSAGE_TAG:
+            name = message.structure.get_name()
+            res = message.structure
+            source = (str(message.src)).split(":")[2].split(" ")[0]
+            self.launch_event(name, {"source": source, "data": res})
+            self.launch_event('gst_element_tag', {"source": source, "name": name, "data": res})            
         else:
             #logger.debug( "got unhandled message type %s, structure %s" %(t, message))
             pass
