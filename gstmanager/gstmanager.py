@@ -94,6 +94,9 @@ class PipelineManager(easyevent.User):
         else:
             logger.error('Cannot stop non-running pipeline')
 
+    def get_string_tag(self, taglist):
+        return gst.Structure.to_string(taglist)
+
     def get_state(self, *args):
         state = self.pipeline.get_state()[1]
         return state.value_name
