@@ -61,12 +61,15 @@ class AudioEncoder(object):
 
 class VideoEncoder(object):
     index = 0
-    def __init__(self, sbin_content, profile=DefaultEncodingProfile()):
+    def __init__(self, sbin_content, profile=DefaultEncodingProfile(), autoadd_caps=True):
         self.profile = profile
         self.tags = ["v_src_tee"]
         self.enc_tag = "v_enc_%s_tee" %VideoEncoder.index
-        self.caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)%s, height=(int)%s, framerate=(fraction)%s/1" %(profile.video_width, profile.video_height, profile.video_framerate)
-        sbin_begin = "%s. ! queue ! ffmpegcolorspace ! videorate ! videoscale ! %s !" %(self.tags[0], self.caps)
+        if autoadd_caps:
+            self.caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)%s, height=(int)%s, framerate=(fraction)%s/1" %(profile.video_width, profile.video_height, profile.video_framerate)
+            sbin_begin = "%s. ! queue ! ffmpegcolorspace ! videorate ! videoscale ! %s !" %(self.tags[0], self.caps)
+        else:
+            sbin_begin = "%s. ! queue ! ffmpegcolorspace ! videorate ! videoscale !" %(self.tags[0])
         sbin_end = "! queue ! tee name=%s" %self.enc_tag
         self.sbin = "%s %s name=vencoder_%s %s" %(sbin_begin, sbin_content, VideoEncoder.index, sbin_end)
         VideoEncoder.index += 1
