@@ -9,4 +9,4 @@ class AudioAnalyser(object):
 class VideoAnalyser(object):
     def __init__(self, sbin_content):
         self.tags = ["v_src"]
-        self.sbin = " %s_tee. ! queue ! ffmpegcolorspace ! %s ! fakesink silent=True" %(self.tags[0], sbin_content)
+        self.sbin = " %s_tee. ! queue ! autovideoconvert ! %s ! fakesink silent=True" %(self.tags[0], sbin_content)

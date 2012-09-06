@@ -22,7 +22,7 @@ class DVVideoSource(VideoSource):
         else:
             dumper_str = ""
         v_caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)720, height=(int)576, framerate=(fraction)25/1, pixel-aspect-ratio=(fraction)1/1"
-        sbin = "dv1394src port=%s ! queue ! %s dvdemux name=dv_src ! queue ! dvdec ! ffmpegcolorspace ! ffdeinterlace ! videoscale ! %s" %(device_id, dumper_str, v_caps)
+        sbin = "dv1394src port=%s ! queue ! %s dvdemux name=dv_src ! queue ! dvdec ! autovideoconvert ! ffdeinterlace ! videoscale ! %s" %(device_id, dumper_str, v_caps)
         VideoSource.__init__(self, sbin)
 
 class DVAudioSource(AudioSource):
