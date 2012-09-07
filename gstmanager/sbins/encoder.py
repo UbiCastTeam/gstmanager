@@ -67,9 +67,9 @@ class VideoEncoder(object):
         self.enc_tag = "v_enc_%s_tee" %VideoEncoder.index
         if autoadd_caps:
             self.caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)%s, height=(int)%s, framerate=(fraction)%s/1" %(profile.video_width, profile.video_height, profile.video_framerate)
-            sbin_begin = "%s. ! queue ! autovideoconvert ! videorate ! videoscale ! %s !" %(self.tags[0], self.caps)
+            sbin_begin = "%s. ! queue ! videorate ! ffvideoscale ! %s !" %(self.tags[0], self.caps)
         else:
-            sbin_begin = "%s. ! queue ! autovideoconvert ! videorate ! videoscale !" %(self.tags[0])
+            sbin_begin = "%s. ! queue ! videorate ! ffvideoscale !" %(self.tags[0])
         sbin_end = "! queue ! tee name=%s" %self.enc_tag
         self.sbin = "%s %s name=vencoder_%s %s" %(sbin_begin, sbin_content, VideoEncoder.index, sbin_end)
         VideoEncoder.index += 1
