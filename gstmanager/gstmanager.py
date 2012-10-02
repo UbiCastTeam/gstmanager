@@ -227,7 +227,7 @@ class PipelineManager(easyevent.User):
         for part in parts:
             if part.startswith("video/") or part.startswith("audio/") or part.startswith("image/"):
                 hpart = '"%s"' %part
-                hstring = hstring.replace(part, hpart)
+                hstring = hstring.replace('! %s !' %part, '! %s !' %hpart)
         return hstring
 
 if __name__ == '__main__':
