@@ -54,6 +54,12 @@ class PipelineManager(easyevent.User):
 
     def parse_description(self, string):
         self.pipeline_desc = string
+        hstring = self.get_pastable_string(string)
+        if self.name is None:
+            name = "(unnamed)"
+        else:
+            name=  self.name
+        logger.debug("Launching pipeline %s; copy-paste the following for manual debugging: \n\ngst-launch-0.10 %s\n" %(name, hstring))
         try:
             self.pipeline = gst.parse_launch(string)
         except Exception, e:
@@ -64,8 +70,6 @@ class PipelineManager(easyevent.User):
             return
         if self.name is not None:
             self.pipeline.set_name(self.name)
-        hstring = self.get_pastable_string(string)
-        logger.debug("Launching pipeline %s; copy-paste the following for manual debugging: \n\ngst-launch-0.10 %s\n" %(self.pipeline.get_name(), hstring))
         self.activate_bus()
 
     def activate_bus(self):
