@@ -8,7 +8,11 @@ class H264Encoder(VideoEncoder):
     def __init__(self, bytestream="False", profile=DefaultEncodingProfile()):
         self.description = "h264 encoder"
         self.type = "video"
-        sbin = "x264enc bitrate=%s threads=%s byte-stream=%s" %(profile.video_bitrate, profile.encoding_threads, bytestream)
+        if hasattr(profile, 'keyframe_freq'):
+            keyframe_freq = profile.keyframe_freq
+        else:
+            keyframe_freq = 0
+        sbin = "x264enc bitrate=%s threads=%s byte-stream=%s key-int-max=%s" %(profile.video_bitrate, profile.encoding_threads, bytestream, keyframe_freq)
         VideoEncoder.__init__(self, sbin, profile)
 
 from gstmanager.sbins.encoder import AudioEncoder
