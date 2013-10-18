@@ -9,7 +9,7 @@ class JpegEncoder(VideoEncoder):
         self.description = "Jpeg encoder"
         self.type = "video"
         #sbin = "jpegenc"
-        sbin = "ffenc_mjpeg bitrate=40000000"
+        sbin = "queue name=ffenc_mjpeg ! ffenc_mjpeg bitrate=40000000"
         VideoEncoder.__init__(self, sbin, profile=profile)
 
 class VorbisEncoder(AudioEncoder):
