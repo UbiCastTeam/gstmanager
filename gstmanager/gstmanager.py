@@ -19,6 +19,7 @@ class PipelineManager(easyevent.User):
     def __init__(self, pipeline_string=None, name=None):
         easyevent.User.__init__(self)
         self.name = name
+        self.bus_msg_id = None
         if pipeline_string is not None: 
             self.parse_description(pipeline_string)
         else:
@@ -38,6 +39,7 @@ class PipelineManager(easyevent.User):
             logger.debug("Reinitializing pipeline")
         else:
             logger.debug('Redefining pipeline %s pipeline to %s' %(self.pipeline.get_name(), new_string))
+        self.clean_pipeline()
         self.parse_description(new_string)
 
     def is_running(self):
@@ -75,7 +77,23 @@ class PipelineManager(easyevent.User):
     def activate_bus(self):
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
-        self.bus.connect('message', self.on_message)
+        if self.bus_msg_id is not None:
+            logger.warning('Bus is already watched !')
+        self.bus_msg_id = self.bus.connect('message', self.on_message)
+
+    def disable_bus(self):
+        self.bus.remove_signal_watch()
+        if self.bus_msg_id is not None:
+            self.bus.disconnect(self.bus_msg_id)
+            self.bus_msg_id = None
+        else:
+            logger.warning('Bus has already been disconnected')
+
+    def clean_pipeline(self):
+        logger.debug('Cleaning pipeline')
+        self.disable_bus()
+        del self.pipeline
+        # TODO count refs and liberate them
 
     def run(self, *args):
         logger.info("Starting pipeline %s" %self.pipeline.get_name())
