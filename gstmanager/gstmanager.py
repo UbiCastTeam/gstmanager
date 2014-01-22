@@ -202,7 +202,7 @@ class PipelineManager(easyevent.User):
         if t == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
             error_string = "%s %s" %(err, debug)
-            logger.info("Error: %s on pipeline:\n%s" %(error_string, self.get_pastable_string()))
+            logger.info("Error: %s on pipeline:\n%s" %(error_string, self.get_pastable_string(error_string)))
             self.launch_event("gst_error", error_string)
         elif t == gst.MESSAGE_EOS:
             self.launch_event("eos", self.pipeline.get_name())
