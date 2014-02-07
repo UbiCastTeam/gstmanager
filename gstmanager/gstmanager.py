@@ -56,7 +56,7 @@ class PipelineManager(easyevent.User):
 
     def parse_description(self, string):
         self.pipeline_desc = string
-        hstring = self.get_pastable_string(string)
+        hstring = self.get_pastable_string()
         if self.name is None:
             name = "(unnamed)"
         else:
@@ -202,7 +202,7 @@ class PipelineManager(easyevent.User):
         if t == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
             error_string = "%s %s" %(err, debug)
-            logger.info("Error: %s on pipeline:\n%s" %(error_string, self.get_pastable_string(error_string)))
+            logger.info("Error: %s on pipeline:\n%s" %(error_string, self.get_pastable_string()))
             self.launch_event("gst_error", error_string)
         elif t == gst.MESSAGE_EOS:
             self.launch_event("eos", self.pipeline.get_name())
@@ -243,7 +243,9 @@ class PipelineManager(easyevent.User):
             time = time / 1000000000
         return time
 
-    def get_pastable_string(self, string):
+    def get_pastable_string(self, string=None):
+        if not string:
+            hstring = string = self.pipeline_desc
         hstring = string
         parts = string.split(" ! ")
         for part in parts:
