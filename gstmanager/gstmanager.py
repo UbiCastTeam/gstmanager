@@ -67,7 +67,7 @@ class PipelineManager(easyevent.User):
         except Exception, e:
             if self.name is not None:
                 e = "%s : %s" %(self.name, e)
-            logger.error('Error in parse_description: %s' %e)
+            logger.error('Error in parse_description: %s\ngst-launch-0.10 %s' %(e, hstring))
             self.launch_event('gst_error', str(e))
             return
         if self.name is not None:
