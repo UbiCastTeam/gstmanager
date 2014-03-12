@@ -34,6 +34,7 @@ class ProgressInfo(easyevent.User):
         self.register_event("encoding_started")
 
     def destroy(self):
+        logger.debug('Unregistering progressinfo events')
         self.unregister_event("encoding_filename")
         self.unregister_event("encoding_started")
 
