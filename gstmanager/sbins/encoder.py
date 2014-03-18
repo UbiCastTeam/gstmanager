@@ -30,13 +30,11 @@ class ProgressInfo(easyevent.User):
         self.duration = datetime.datetime.now() - self.start_time
         self.size = 0
         self.location = None
-        self.register_event("encoding_filename")
-        self.register_event("encoding_started")
+        self.register_event("encoding_filename", "encoding_started")
 
     def destroy(self):
         logger.debug('Unregistering progressinfo events')
-        self.unregister_event("encoding_filename")
-        self.unregister_event("encoding_started")
+        self.unregister_event("encoding_filename", "encoding_started")
 
     def update(self, size):
         self.size = size
@@ -87,14 +85,12 @@ class FileEncoder(SBinManager, easyevent.User):
         self.filename = filename
         self.size = 0
         self.is_running = False
-        self.register_event("encoding_started")
-        self.register_event("encoding_stopped")
+        self.register_event("encoding_started", "encoding_stopped")
 
     def destroy(self):
         logger.debug("Unregistering event sos")
         self.progress.destroy()
-        self.unregister_event("encoding_stopped")
-        self.unregister_event("encoding_started")
+        self.unregister_event("encoding_stopped", "encoding_started")
         self.size = 0
 
     def get_filename(self):
@@ -123,6 +119,7 @@ class FileEncoder(SBinManager, easyevent.User):
         logger.info("evt encoding stopped: Stopping filesize checking")
         self.is_running = False
         self.size = 0
+        self.progress.destroy()
         self.progress = ProgressInfo() 
 
     def check_file_growth(self):
