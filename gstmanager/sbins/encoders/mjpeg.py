@@ -3,13 +3,18 @@
 
 from gstmanager.sbins.encoder import VideoEncoder, AudioEncoder
 from gstmanager.sbins.muxer import Muxer
+import gst
 
 class JpegEncoder(VideoEncoder):
     def __init__(self, profile):
         self.description = "Jpeg encoder"
         self.type = "video"
-        #sbin = "jpegenc"
-        sbin = "queue name=ffenc_mjpeg ! ffenc_mjpeg bitrate=100000000"
+        if hasattr(profile, 'venc_buffer_s'):
+            buffersize = profile.venc_buffer_s
+        else:
+            buffersize = 5
+        large_queue = 'queue max-size-bytes=0 max-size-buffers=0 max-size-time=%s' %(buffersize*gst.SECOND)
+        sbin = "%s name=ffenc_mjpeg ! ffenc_mjpeg bitrate=100000000" %large_queue
         VideoEncoder.__init__(self, sbin, profile=profile)
 
 class VorbisEncoder(AudioEncoder):
