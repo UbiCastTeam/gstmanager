@@ -14,6 +14,8 @@ class JpegEncoder(VideoEncoder):
         else:
             buffersize = 5
         large_queue = 'queue max-size-bytes=0 max-size-buffers=0 max-size-time=%s' %(buffersize*gst.SECOND)
+        if hasattr(profile, 'video_leaky'):
+            large_queue = "%s leaky=2" %large_queue
         sbin = "%s name=ffenc_mjpeg ! ffenc_mjpeg bitrate=100000000" %large_queue
         VideoEncoder.__init__(self, sbin, profile=profile)
 
