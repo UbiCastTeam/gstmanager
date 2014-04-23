@@ -12,7 +12,7 @@ class H264Encoder(VideoEncoder):
             keyframe_freq = profile.keyframe_freq
         else:
             keyframe_freq = 0
-        sbin = "x264enc bitrate=%s threads=%s byte-stream=%s key-int-max=%s" %(profile.video_bitrate, profile.encoding_threads, bytestream, keyframe_freq)
+        sbin = "videobalance name=vlivemute ! x264enc bitrate=%s threads=%s byte-stream=%s key-int-max=%s" %(profile.video_bitrate, profile.encoding_threads, bytestream, keyframe_freq)
         VideoEncoder.__init__(self, sbin, profile)
 
 from gstmanager.sbins.encoder import AudioEncoder
@@ -21,5 +21,5 @@ class AACEncoder(AudioEncoder):
     def __init__(self, profile=DefaultEncodingProfile()):
         self.description = "AAC encoder"
         self.type = "audio"
-        sbin = "faac bitrate=%s profile=2" %profile.audio_bitrate
+        sbin = "volume name=alivemute ! faac bitrate=%s profile=2" %profile.audio_bitrate
         AudioEncoder.__init__(self, sbin)
