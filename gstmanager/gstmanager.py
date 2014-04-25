@@ -12,6 +12,7 @@ import gobject
 logger = logging.getLogger('gstmanager')
 
 import gst
+import time
 pipeline_desc = "videotestsrc ! xvimagesink"
 import easyevent
 
@@ -19,6 +20,7 @@ class PipelineManager(easyevent.User):
     def __init__(self, pipeline_string=None, name=None):
         easyevent.User.__init__(self)
         self.name = name
+        self.start_time = None
         self.bus_msg_id = None
         if pipeline_string is not None: 
             self.parse_description(pipeline_string)
@@ -104,6 +106,7 @@ class PipelineManager(easyevent.User):
 
     def play(self, *args):
         self.run()
+        self.start_time = time.time()
 
     def pause(self, *args):
         logger.info("Pausing pipeline")
@@ -111,10 +114,19 @@ class PipelineManager(easyevent.User):
 
     def stop(self, *args):
         if hasattr(self, 'pipeline'):
-            logger.info("Stopping pipeline %s" %self.pipeline.get_name())
+            stop_time = time.time()
+            total_dur = int(stop_time - self.start_time)
+            logger.info("Stopping pipeline %s after %ss of execution" %(self.pipeline.get_name(), total_dur))
             self.pipeline.set_state(gst.STATE_NULL)
+            self.start_time = None
         else:
             logger.error('Cannot stop non-running pipeline')
+
+    def get_runtime(self):
+        if self.start_time:
+            now = time.time()
+            runtime = now - self.start_time
+            return runtime
 
     def get_string_tag(self, taglist):
         return gst.Structure.to_string(taglist)
@@ -264,6 +276,7 @@ if __name__ == '__main__':
         stream=sys.stderr
     )
 
+    pipeline_desc = "videotestsrc is-live=true ! fakesink"
     pipelinel = PipelineManager(pipeline_desc)
     pipelinel.run()
     import gtk
