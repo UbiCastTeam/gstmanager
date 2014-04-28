@@ -114,11 +114,16 @@ class PipelineManager(easyevent.User):
 
     def stop(self, *args):
         if hasattr(self, 'pipeline'):
-            stop_time = time.time()
-            total_dur = int(stop_time - self.start_time)
-            logger.info("Stopping pipeline %s after %ss of execution" %(self.pipeline.get_name(), total_dur))
+            name = self.pipeline.get_name()
+            logger.info('Stopping pipeline %s' %name)
+            before_teardown = time.time()
             self.pipeline.set_state(gst.STATE_NULL)
-            self.start_time = None
+            if self.start_time is not None:
+                stop_time = time.time()
+                total_dur = int(stop_time - self.start_time)
+                teardown_time_ms = int(round((stop_time - before_teardown)*1000))
+                logger.debug("Execution of pipeline %s ended after %ss of execution, teardown took %sms" %(name, total_dur, teardown_time_ms))
+                self.start_time = None
         else:
             logger.error('Cannot stop non-running pipeline')
 
