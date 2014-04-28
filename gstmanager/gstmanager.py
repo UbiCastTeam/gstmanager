@@ -98,6 +98,7 @@ class PipelineManager(easyevent.User):
         # TODO count refs and liberate them
 
     def run(self, *args):
+        self.start_time = time.time()
         logger.info("Starting pipeline %s" %self.pipeline.get_name())
         self.launch_event("sos", self.pipeline)
         self.pipeline.set_state(gst.STATE_PLAYING)
@@ -106,7 +107,6 @@ class PipelineManager(easyevent.User):
 
     def play(self, *args):
         self.run()
-        self.start_time = time.time()
 
     def pause(self, *args):
         logger.info("Pausing pipeline")
