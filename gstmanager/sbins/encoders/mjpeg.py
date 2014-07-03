@@ -5,6 +5,8 @@ from gstmanager.sbins.encoder import VideoEncoder, AudioEncoder
 from gstmanager.sbins.muxer import Muxer
 import gst
 
+MBIT = 1000000
+
 class JpegEncoder(VideoEncoder):
     def __init__(self, profile):
         self.description = "Jpeg encoder"
@@ -13,10 +15,14 @@ class JpegEncoder(VideoEncoder):
             buffersize = profile.venc_buffer_s
         else:
             buffersize = 5
+        if hasattr(profile, 'video_bitrate'):
+            bitrate = profile.video_bitrate*MBIT
+        else:
+            bitrate = 100*MBIT
         large_queue = 'queue max-size-bytes=0 max-size-buffers=0 max-size-time=%s' %(buffersize*gst.SECOND)
         if hasattr(profile, 'video_leaky'):
             large_queue = "%s leaky=2" %large_queue
-        sbin = "%s name=ffenc_mjpeg ! ffenc_mjpeg bitrate=100000000" %large_queue
+        sbin = "%s name=ffenc_mjpeg ! ffenc_mjpeg bitrate=%s" %(large_queue, bitrate)
         VideoEncoder.__init__(self, sbin, profile=profile)
 
 class VorbisEncoder(AudioEncoder):
