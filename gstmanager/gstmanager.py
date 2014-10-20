@@ -17,11 +17,13 @@ pipeline_desc = "videotestsrc ! xvimagesink"
 import easyevent
 
 class PipelineManager(easyevent.User):
-    def __init__(self, pipeline_string=None, name=None):
+    def __init__(self, pipeline_string=None, name=None, eos_cb=None, error_cb=None):
         easyevent.User.__init__(self)
         self.name = name
         self.start_time = None
         self.bus_msg_id = None
+        self.error_cb = error_cb
+        self.eos_cb = eos_cb
         if pipeline_string is not None: 
             self.parse_description(pipeline_string)
         else:
@@ -70,6 +72,8 @@ class PipelineManager(easyevent.User):
             if self.name is not None:
                 e = "%s : %s" %(self.name, e)
             logger.error('Error in parse_description: %s\ngst-launch-0.10 %s' %(e, hstring))
+            if self.error_cb:
+                self.error_cb('Error in parse_description: %s' %e)
             self.launch_event('gst_error', str(e))
             return
         if self.name is not None:
@@ -219,10 +223,14 @@ class PipelineManager(easyevent.User):
         if t == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
             error_string = "%s %s" %(err, debug)
+            if self.error_cb:
+                self.error_cb(error_string)
             logger.info("Error: %s on pipeline:\n%s" %(error_string, self.get_pastable_string()))
             self.launch_event("gst_error", error_string)
         elif t == gst.MESSAGE_EOS:
             self.launch_event("eos", self.pipeline.get_name())
+            if self.eos_cb:
+                self.eos_cb("eos")
         elif t == gst.MESSAGE_ELEMENT:
             name = message.structure.get_name()
             res = message.structure
