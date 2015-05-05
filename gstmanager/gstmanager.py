@@ -186,13 +186,19 @@ class PipelineManager(easyevent.User):
     def set_property_on_element(self, element_name="whatever", property_name="property", value="value"):
         logger.debug("Setting value %s to property %s of element %s" %(value, property_name, element_name))
         elt = self.pipeline.get_by_name(element_name)
-        elt.set_property(property_name, value)
+        if elt is not None:
+            elt.set_property(property_name, value)
+        else:
+            logger.error('Element %s not found' %element_name)
 
     def get_property_on_element(self, element_name="whatever", property_name="property"):
         elt = self.pipeline.get_by_name(element_name)
-        result = elt.get_property(property_name)
-        logger.debug("Getting value of property %s of element %s: %s" %(property_name, element_name, result))
-        return result
+        if elt is not None:
+            result = elt.get_property(property_name)
+            logger.debug("Getting value of property %s of element %s: %s" %(property_name, element_name, result))
+            return result
+        else:
+            logger.error('Element %s not found' %element_name)
 
     def activate_caps_reporting_on_element(self, element_name="whatever"):
         logger.debug("Activating caps reporting on element %s" %element_name)
