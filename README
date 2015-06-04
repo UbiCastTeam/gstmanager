@@ -1,7 +1,7 @@
-GSTMANAGER
-==========
+GSTMANAGER-0.10
+===============
 
-Based on the gstreamer python bindings, gstmanager is a python module containing a basic gstreamer programming context to ease application development, with an emphasis on string-based manipulations; it currently offers the following features:
+Based on the gstreamer-0.10 python bindings, gstmanager is a python module containing a basic gstreamer programming context to ease application development, with an emphasis on string-based manipulations; it currently offers the following features:
 
   * PipelineManager: pipeline manipulation
     * launch from pipeline description string
