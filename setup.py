@@ -4,12 +4,10 @@
 import os, imp
 from distutils.core import setup
 
-#gstmanager = imp.load_source("version", "version.py")
-VERSION = "0.7"
+VERSION = "0.8"
 
 setup(
     name="gstmanager",
-    #version=gstmanager.VERSION,
     version=VERSION,
     description="gstmanager is a helper for building gstreamer applications",
     author="Florent Thiery",
