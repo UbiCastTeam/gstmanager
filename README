@@ -28,7 +28,6 @@ DEPS
 ====
     * python
     * gstreamer and python bindings
-    * gtk python bindings (for the main loop)
 
 COMPATIBILITY
 =============

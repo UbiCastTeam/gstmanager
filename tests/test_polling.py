@@ -29,8 +29,8 @@ print "Will poll element videorate for drop values for 10 seconds on 500ms inter
 t = Test()
 
 import gobject
+main_loop = gobject.MainLoop()
 gobject.timeout_add_seconds(10, p.deactivate_pollings)
 
-import gtk
-gobject.timeout_add_seconds(12, gtk.main_quit)
-gtk.main()
+gobject.timeout_add_seconds(12, main_loop.quit)
+main_loop.run()

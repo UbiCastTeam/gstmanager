@@ -33,7 +33,6 @@ if __name__ == '__main__':
     pipelinel = PipelineManager(pipeline_desc)
     pipelinel.run()
 
-
-    import gtk
-    gtk.main()
-
+    import gobject
+    main_loop = gobject.MainLoop()
+    main_loop.run()

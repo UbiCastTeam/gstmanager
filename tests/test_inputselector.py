@@ -27,5 +27,6 @@ if __name__ == '__main__':
     gobject.timeout_add(7000, set_input, pipelinel, 1) 
     gobject.timeout_add(10000, pipelinel.send_eos) 
 
-    import gtk
-    gtk.main()
+    main_loop = gobject.MainLoop()
+    main_loop.run()
+

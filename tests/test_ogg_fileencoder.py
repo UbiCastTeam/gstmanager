@@ -76,10 +76,9 @@ if __name__ == '__main__':
 
     listener = Actioner()
 
-    import gtk
-
     import gobject
     #gobject.timeout_add(10000, encoder.send_eos)
 
     gobject.timeout_add(100, encoder.run)
-    gtk.main()
+    main_loop = gobject.MainLoop()
+    main_loop.run()

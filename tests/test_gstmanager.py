@@ -33,6 +33,6 @@ if __name__ == '__main__':
     import gobject
     gobject.timeout_add(2000, set_brightness, pipelinel, 0.2) 
 
-    import gtk
-    gtk.main()
+    main_loop = gobject.MainLoop()
+    main_loop.run()
 

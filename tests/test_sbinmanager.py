@@ -45,8 +45,8 @@ if __name__ == '__main__':
     from gstmanager.gstmanager import PipelineManager
     pipelinel = PipelineManager(man.pipeline_desc)
     pipelinel.run()
-    import gtk
     import gobject
     gobject.timeout_add(2000, pipelinel.send_eos)
     gobject.timeout_add(3500, man.get_pipeline)
-    gtk.main()
+    main_loop = gobject.MainLoop()
+    main_loop.run()

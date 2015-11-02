@@ -298,5 +298,5 @@ if __name__ == '__main__':
     pipeline_desc = "videotestsrc is-live=true ! fakesink"
     pipelinel = PipelineManager(pipeline_desc)
     pipelinel.run()
-    import gtk
-    gtk.main()
+    main_loop = gobject.MainLoop()
+    main_loop.run()
