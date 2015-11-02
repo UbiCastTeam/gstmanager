@@ -27,6 +27,5 @@ setup(
         'python-easyevent',
         'python-gst0.10',
         'python-gobject',
-
     ]
 )
