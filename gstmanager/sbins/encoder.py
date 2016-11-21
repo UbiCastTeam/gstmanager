@@ -58,12 +58,15 @@ class AudioEncoder(object):
         self.sbin = "%s %s name=aencoder_%s %s" %(sbin_begin, sbin_content, AudioEncoder.index, sbin_end)
         AudioEncoder.index += 1
 
+    def set_index(self, index):
+        AudioEncoder.index = 0
+
 class VideoEncoder(object):
     index = 0
     def __init__(self, sbin_content, profile=DefaultEncodingProfile(), autoadd_caps=True):
         self.profile = profile
         self.tags = ["v_src_tee"]
-        self.enc_tag = "v_enc_%s_tee" %VideoEncoder.index
+        self.enc_tag = "v_enc_%s_tee" % VideoEncoder.index
         if autoadd_caps:
             self.caps = "video/x-raw-yuv, format=(fourcc)I420, width=(int)%s, height=(int)%s, framerate=(fraction)%s/1" %(profile.video_width, profile.video_height, profile.video_framerate)
             sbin_begin = "%s. ! queue name=venc_%s_preprocess ! videorate ! ffvideoscale ! %s !" %(self.tags[0], self.index, self.caps)
@@ -72,6 +75,9 @@ class VideoEncoder(object):
         sbin_end = "! queue ! tee name=%s" %self.enc_tag
         self.sbin = "%s %s name=vencoder_%s %s" %(sbin_begin, sbin_content, VideoEncoder.index, sbin_end)
         VideoEncoder.index += 1
+
+    def set_index(self, index):
+        VideoEncoder.index = 0
 
 from gstmanager.sbinmanager import SBinManager
 import gobject, os

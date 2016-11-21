@@ -11,3 +11,6 @@ class Muxer(object):
         self.tags = ["a_enc_%s" %Muxer.index, "v_enc_%s" %Muxer.index]
         self.sbin = "%s_tee. ! %s name=a_mux_%s ! %s name=muxer ! tee name=muxer_tee %s_tee. ! %s name=v_mux_%s ! muxer." %(self.tags[0], audio_queue, Muxer.index, sbin_content, self.tags[1], muxer_queue, Muxer.index)
         Muxer.index += 1
+
+    def set_index(self, index):
+        Muxer.index = 0

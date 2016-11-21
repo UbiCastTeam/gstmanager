@@ -11,6 +11,9 @@ class TheoraEncoder(VideoEncoder):
         sbin = "theoraenc bitrate=%s keyframe-auto=False keyframe-force=%s keyframe-freq=%s" %(profile.video_bitrate, profile.keyframe_freq, profile.keyframe_freq)
         VideoEncoder.__init__(self, sbin, profile=profile)
 
+    def set_index(self, index):
+        VideoEncoder.set_index(index)
+
 class VorbisEncoder(AudioEncoder):
     def __init__(self, profile):
         self.description = "Vorbis encoder"
@@ -18,12 +21,18 @@ class VorbisEncoder(AudioEncoder):
         sbin = "vorbisenc bitrate=%s" %profile.audio_bitrate
         AudioEncoder.__init__(self, sbin)
 
+    def set_index(self, index):
+        AudioEncoder.set_index(index)
+
 class OggMuxer(Muxer):
     def __init__(self):
         self.description = "Ogg Muxer"
         self.type = "audio/video"
         sbin = "oggmux"
         Muxer.__init__(self, sbin)
+
+    def set_index(self, index):
+        Muxer.set_index(index)
 
 from gstmanager.sbins.encoder import FileEncoder
 from gstmanager.profiles.ogg import OggDefaultRecordingProfile
