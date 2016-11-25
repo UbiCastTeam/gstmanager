@@ -12,9 +12,6 @@ class Mpeg4Encoder(VideoEncoder):
         sbin = "queue ! ffenc_mpeg4 bitrate=%s ! queue" %profile.video_bitrate
         VideoEncoder.__init__(self, sbin, profile=profile)
 
-    def set_index(self, index):
-        VideoEncoder.set_index(index)
-
 
 class VorbisEncoder(AudioEncoder):
     def __init__(self, profile):
@@ -22,9 +19,6 @@ class VorbisEncoder(AudioEncoder):
         self.type = "audio"
         sbin = "vorbisenc bitrate=%s" %profile.audio_bitrate
         AudioEncoder.__init__(self, sbin)
-
-    def set_index(self, index):
-        AudioEncoder.set_index(index)
 
 
 class IdentityEncoder(AudioEncoder):
@@ -34,9 +28,6 @@ class IdentityEncoder(AudioEncoder):
         sbin = "identity silent=true" 
         AudioEncoder.__init__(self, sbin)
 
-    def set_index(self, index):
-        AudioEncoder.set_index(index)
-
 
 class MkvMuxer(Muxer):
     def __init__(self):
@@ -45,8 +36,6 @@ class MkvMuxer(Muxer):
         sbin = "matroskamux min-index-interval=1000000000"
         Muxer.__init__(self, sbin)
 
-    def set_index(self, index):
-        Muxer.set_index(index)
 
 from gstmanager.sbins.encoder import FileEncoder
 from gstmanager.profiles.ogg import OggDefaultRecordingProfile
